@@ -40,6 +40,11 @@ int main(void)
 	// Setup Dear ImGui style
 	ImGui::StyleColorsDark();
 
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+		// Handle GLAD initialization failure
+		return -1;
+	}
+
 	while (!glfwWindowShouldClose(window))
 	{
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
