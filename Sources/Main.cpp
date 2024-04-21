@@ -13,6 +13,7 @@
 #endif
 
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
+#include <fonts.hpp>
 
 #ifdef __EMSCRIPTEN__
 #include "../Libraries/emscripten/emscripten_mainloop_stub.h"
@@ -53,7 +54,7 @@ int main(int, char**)
 #endif
 
     // Create window with graphics context
-    GLFWwindow* window = glfwCreateWindow(1280, 720, "Stuckfish global interface", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(1920, 1080, "Stuckfish global interface", nullptr, nullptr);
     if (window == nullptr)
         return 1;
 
@@ -66,16 +67,19 @@ int main(int, char**)
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
     //ImGui::StyleColorsLight();
 
+
+    // Load Fonts
+    ImFontConfig fontConfig;
+    fontConfig.FontDataOwnedByAtlas = false;
+    ImFont* robotoFont = io.Fonts->AddFontFromMemoryTTF((void*)roboto_regular, sizeof(roboto_regular), 18.0f);
+    io.FontDefault = robotoFont;
+
     // Setup Platform/Renderer backends
     ImGui_ImplGlfw_InitForOpenGL(window, true);
-#ifdef __EMSCRIPTEN__
-    ImGui_ImplGlfw_InstallEmscriptenCanvasResizeCallback("#canvas");
-#endif
     ImGui_ImplOpenGL3_Init(glsl_version);
 
     //states
@@ -96,21 +100,24 @@ int main(int, char**)
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-
-        if (show_another_window)
-        {
-            ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-            ImGui::Text("Hello from another window!");
-            if (ImGui::Button("Close Me"))
-                show_another_window = false;
-            ImGui::End();
-        }
         
+        {
+            ImGui::ShowDemoWindow();
+            if (show_another_window)
+            {
+                ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
+                ImGui::Text("Hello from another window!");
+                if (ImGui::Button("Close Me"))
+                    show_another_window = false;
+                ImGui::End();
+            }
+        }
+
         // Rendering
         ImGui::Render();
-        int display_w, display_h;
-        glfwGetFramebufferSize(window, &display_w, &display_h);
-        glViewport(0, 0, display_w, display_h);
+        //int display_w, display_h;
+        //glfwGetFramebufferSize(window, &display_w, &display_h);
+        glViewport(0, 0, 1920, 1080);
         glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
         glClear(GL_COLOR_BUFFER_BIT);
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
