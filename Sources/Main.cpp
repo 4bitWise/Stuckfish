@@ -9,12 +9,17 @@
 #define ERROR_EXIT_CODE -1
 #define GLSL_VERSION "#version 330"
 
+#ifdef __EMSCRIPTEN__
+#include "../Libraries/emscripten/emscripten_mainloop_stub.h"
+#endif
+
+
 int main(void)
 {
 	glfwInit();
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	GLFWwindow* window = glfwCreateWindow(800, 800, "Stuckfish", NULL, NULL);
@@ -36,6 +41,9 @@ int main(void)
 	ImGuiIO& io = ImGui::GetIO();
 	// Setup Platform/Renderer bindings
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
+#ifdef __EMSCRIPTEN__
+	ImGui_ImplGlfw_InstallEmscriptenCanvasResizeCallback("#canvas");
+#endif
 	ImGui_ImplOpenGL3_Init(GLSL_VERSION);
 	// Setup Dear ImGui style
 	ImGui::StyleColorsDark();
@@ -45,10 +53,16 @@ int main(void)
 		return -1;
 	}
 
+#ifdef __EMSCRIPTEN__
+	// For an Emscripten build we are disabling file-system access, so let's not attempt to do a fopen() of the imgui.ini file.
+	// You may manually call LoadIniSettingsFromMemory() to load settings from your own storage.
+	io.IniFilename = "imgui.ini";
+	EMSCRIPTEN_MAINLOOP_BEGIN
+#else
 	while (!glfwWindowShouldClose(window))
+#endif
 	{
-		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glfwPollEvents();
 
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
@@ -59,10 +73,16 @@ int main(void)
 		ImGui::Text("This is the ImGui part !");
 		ImGui::End();
 		ImGui::Render();
+
+		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		glfwSwapBuffers(window);
-		glfwPollEvents();
 	}
+#ifdef __EMSCRIPTEN__
+	EMSCRIPTEN_MAINLOOP_END;
+#endif
 
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
