@@ -15,7 +15,7 @@
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
 
 #ifdef __EMSCRIPTEN__
-#include "../Libraries/emscripten/emscripten_mainloop_stub.h"
+#include "../libraries/emscripten/emscripten_mainloop_stub.h"
 #endif
 
 static void glfw_error_callback(int error, const char* description)
