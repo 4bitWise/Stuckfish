@@ -88,3 +88,4 @@ $(EXE): $(OBJS) $(WEB_DIR)
 clean:
 	rm -rf $(WEB_DIR)
 	rm -f Sources/*.o  imgui/*.o Libraries/include/glad/*.o
+	rm -f *.o
