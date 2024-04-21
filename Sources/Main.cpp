@@ -1,94 +1,138 @@
-#include"../imgui/imgui.h"
-#include"../imgui/imgui_impl_glfw.h"
-#include"../imgui/imgui_impl_opengl3.h"
+// Dear ImGui: standalone example application for GLFW + OpenGL 3, using programmable pipeline
+// (GLFW is a cross-platform general purpose library for handling windows, inputs, OpenGL/Vulkan/Metal graphics context creation, etc.)
 
-#include<iostream>
-#include<glad/glad.h>
-#include<GLFW/glfw3.h>
+// Learn about Dear ImGui:
+// - FAQ                  https://dearimgui.com/faq
+// - Getting Started      https://dearimgui.com/getting-started
+// - Documentation        https://dearimgui.com/docs (same as your local docs/ folder).
+// - Introduction, links and more at the top of imgui.cpp
 
-#define ERROR_EXIT_CODE -1
-#define GLSL_VERSION "#version 330"
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
+#include <stdio.h>
+
+#if defined(IMGUI_IMPL_OPENGL_ES2)
+#include <GLES2/gl2.h>
+#endif
+
+#include <GLFW/glfw3.h> // Will drag system OpenGL headers
 
 #ifdef __EMSCRIPTEN__
 #include "../Libraries/emscripten/emscripten_mainloop_stub.h"
 #endif
 
-
-int main(void)
+static void glfw_error_callback(int error, const char* description)
 {
-	glfwInit();
+    fprintf(stderr, "GLFW Error %d: %s\n", error, description);
+}
 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+// Main code
+int main(int, char**)
+{
+    glfwSetErrorCallback(glfw_error_callback);
+    if (!glfwInit())
+        return 1;
 
-	GLFWwindow* window = glfwCreateWindow(800, 800, "Stuckfish", NULL, NULL);
-
-	if (window == NULL)
-	{
-		std::cout << "Failed to create GLFW window" << std::endl;
-		glfwTerminate();
-		return ERROR_EXIT_CODE;
-	}
-	glfwMakeContextCurrent(window);
-	gladLoadGL();
-
-	glViewport(0, 0, 800, 800);
-
-	// Setup Dear ImGui context
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO();
-	// Setup Platform/Renderer bindings
-	ImGui_ImplGlfw_InitForOpenGL(window, true);
-#ifdef __EMSCRIPTEN__
-	ImGui_ImplGlfw_InstallEmscriptenCanvasResizeCallback("#canvas");
-#endif
-	ImGui_ImplOpenGL3_Init(GLSL_VERSION);
-	// Setup Dear ImGui style
-	ImGui::StyleColorsDark();
-
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-		// Handle GLAD initialization failure
-		return -1;
-	}
-
-#ifdef __EMSCRIPTEN__
-	// For an Emscripten build we are disabling file-system access, so let's not attempt to do a fopen() of the imgui.ini file.
-	// You may manually call LoadIniSettingsFromMemory() to load settings from your own storage.
-	io.IniFilename = "imgui.ini";
-	EMSCRIPTEN_MAINLOOP_BEGIN
+// Decide GL+GLSL versions
+#if defined(IMGUI_IMPL_OPENGL_ES2)
+    // GL ES 2.0 + GLSL 100
+    const char* glsl_version = "#version 100";
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+    glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
+#elif defined(__APPLE__)
+    // GL 3.2 + GLSL 150
+    const char* glsl_version = "#version 150";
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  // 3.2+ only
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // Required on Mac
 #else
-	while (!glfwWindowShouldClose(window))
+    // GL 3.0 + GLSL 130
+    const char* glsl_version = "#version 330";
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+    //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  // 3.2+ only
+    //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // 3.0+ only
 #endif
-	{
-		glfwPollEvents();
 
-		ImGui_ImplOpenGL3_NewFrame();
-		ImGui_ImplGlfw_NewFrame();
-		ImGui::NewFrame();
+    // Create window with graphics context
+    GLFWwindow* window = glfwCreateWindow(1280, 720, "Stuckfish global interface", nullptr, nullptr);
+    if (window == nullptr)
+        return 1;
 
+    glfwMakeContextCurrent(window);
+    glfwSwapInterval(1); // Enable vsync
 
-		ImGui::Begin("Test");
-		ImGui::Text("This is the ImGui part !");
-		ImGui::End();
-		ImGui::Render();
+    // Setup Dear ImGui context
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
-		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+    // Setup Dear ImGui style
+    ImGui::StyleColorsDark();
+    //ImGui::StyleColorsLight();
 
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-		glfwSwapBuffers(window);
-	}
+    // Setup Platform/Renderer backends
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
 #ifdef __EMSCRIPTEN__
-	EMSCRIPTEN_MAINLOOP_END;
+    ImGui_ImplGlfw_InstallEmscriptenCanvasResizeCallback("#canvas");
+#endif
+    ImGui_ImplOpenGL3_Init(glsl_version);
+
+    //states
+    bool show_another_window = true;
+    ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
+    // Main loop
+#ifdef __EMSCRIPTEN__
+    io.IniFilename = nullptr;
+    EMSCRIPTEN_MAINLOOP_BEGIN
+#else
+    while (!glfwWindowShouldClose(window))
+#endif
+    {
+        glfwPollEvents();
+
+        // Start the Dear ImGui frame
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+
+        if (show_another_window)
+        {
+            ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
+            ImGui::Text("Hello from another window!");
+            if (ImGui::Button("Close Me"))
+                show_another_window = false;
+            ImGui::End();
+        }
+        
+        // Rendering
+        ImGui::Render();
+        int display_w, display_h;
+        glfwGetFramebufferSize(window, &display_w, &display_h);
+        glViewport(0, 0, display_w, display_h);
+        glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
+        glClear(GL_COLOR_BUFFER_BIT);
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+        glfwSwapBuffers(window);
+    }
+#ifdef __EMSCRIPTEN__
+    EMSCRIPTEN_MAINLOOP_END;
 #endif
 
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplGlfw_Shutdown();
-	ImGui::DestroyContext();
+    // Cleanup
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
 
-	glfwDestroyWindow(window);
-	glfwTerminate();
-	return 0;
+    glfwDestroyWindow(window);
+    glfwTerminate();
+
+    return 0;
 }
