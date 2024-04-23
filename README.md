@@ -1,3 +1,7 @@
+<p style="center"
+    <img src="https://images.unsplash.com/photo-1606594914767-d6bfbde9a0e9?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=4800">
+</p>
+
 # Stuckfish
 
 Stuckfish is intended to be a desktop application (potentially available through a website via our Makefile WASM compilation). It's a chess game reviewer written in C++ with Dear ImGui. Our goal is to develop a software that is both fast and free, featuring an appealing user interface and delivering precise game analysis.
