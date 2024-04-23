@@ -8,7 +8,7 @@ Stuckfish is intended to be a desktop application (potentially available through
 
 ## Installation
 
-We’ve made the .exe file available directly in the repository “Releases”.
+We’ll make the .exe file available directly in the repository “Releases”.
 
 ### **Build from source**
 
