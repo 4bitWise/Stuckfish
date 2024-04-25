@@ -1,1 +1,0 @@
-make clean -f Makefile && make -f Makefile && make serve -f Makefile
