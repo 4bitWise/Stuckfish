@@ -19,10 +19,11 @@ WEB_DIR = web
 EXE = $(WEB_DIR)/index.html
 IMGUI_DIR = ./imgui
 GLAD_DIR = ./Libraries/include
-SOURCES = Sources/Main.cpp Sources/glad.cpp
-SOURCES += $(IMGUI_DIR)/imgui.cpp $(IMGUI_DIR)/imgui_demo.cpp $(IMGUI_DIR)/imgui_draw.cpp $(IMGUI_DIR)/imgui_tables.cpp $(IMGUI_DIR)/imgui_widgets.cpp
+SOURCES = Sources/Main.cpp Sources/glad.cpp Sources/App/Stuckfish.cpp fonts.cpp
+SOURCES += $(IMGUI_DIR)/imgui.cpp $(IMGUI_DIR)/imgui_demo.cpp $(IMGUI_DIR)/imgui_draw.cpp $(IMGUI_DIR)/imgui_tables.cpp \
+		$(IMGUI_DIR)/imgui_widgets.cpp
 SOURCES += $(IMGUI_DIR)/imgui_impl_glfw.cpp $(IMGUI_DIR)/imgui_impl_opengl3.cpp
-OBJS =$(addsuffix .o, $(basename $(notdir $(SOURCES))))
+OBJS =$(SOURCES:.cpp=.o)
 UNAME_S := $(shell uname -s)
 CPPFLAGS =
 LDFLAGS =
@@ -57,7 +58,7 @@ endif
 ## FINAL BUILD FLAGS
 ##---------------------------------------------------------------------
 
-CPPFLAGS += -I$(IMGUI_DIR) -I$(GLAD_DIR)
+CPPFLAGS += -I$(IMGUI_DIR) -I$(GLAD_DIR) -I$(APP_DIR)
 #CPPFLAGS += -g
 CPPFLAGS += -Wall -Wformat -Os $(EMS)
 LDFLAGS += --shell-file Libraries/emscripten/shell_minimal.html
@@ -67,7 +68,7 @@ LDFLAGS += $(EMS)
 ## BUILD RULES
 ##---------------------------------------------------------------------
 
-%.o:Sources/%.cpp
+%.o: Sources/%.cpp
 	$(CXX) $(CPPFLAGS) -c -o $@ $<
 
 %.o:$(IMGUI_DIR)/%.cpp
@@ -83,7 +84,7 @@ serve: all
 	python3 -m http.server -d $(WEB_DIR)
 
 $(EXE): $(OBJS) $(WEB_DIR)
-	$(CXX) -o $@ $(OBJS) $(LDFLAGS) -I$(GLAD_DIR)
+	$(CXX) -o $@ $(OBJS) $(LDFLAGS) -I$(GLAD_DIR) -I$(IMGUI_DIR)
 
 clean:
 	rm -rf $(WEB_DIR)
