@@ -14,7 +14,9 @@ namespace Stuckfish
 	}
 
 	Core::~Core()
-	{}
+	{
+		Quit();
+	}
 
 	void Core::Init()
 	{
@@ -97,7 +99,6 @@ namespace Stuckfish
 				ImGui_ImplGlfw_NewFrame();
 				ImGui::NewFrame();
 
-
 				{
 					ImGui::ShowDemoWindow();
 					if (show_another_window)
@@ -109,6 +110,7 @@ namespace Stuckfish
 						ImGui::End();
 					}
 				}
+
 				ImGui::Render();
 
 				glViewport(0, 0, 1920, 1080);
@@ -116,8 +118,8 @@ namespace Stuckfish
 				glClear(GL_COLOR_BUFFER_BIT);
 				ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 				glfwSwapBuffers(_window);
-			};
-			Quit();
+			}
+			_isRunning = false;
 	}
 
 	void Core::Quit()
@@ -128,8 +130,6 @@ namespace Stuckfish
 
 		glfwDestroyWindow(_window);
 		glfwTerminate();
-		
-		_isRunning = false;
 	}
 
 	std::unique_ptr<Core> CreateApplication(int argc, char* argv[])

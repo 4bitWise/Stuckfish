@@ -8,5 +8,6 @@ int main(int argc, char* argv[])
 	{
 		app->Run();
 	}
+	app.release();
 	return 0;
 }
