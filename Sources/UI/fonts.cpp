@@ -14024,3 +14024,11 @@ unsigned char roboto_regular[168260] = {
 	0x00, 0xD0, 0x00, 0x35, 0x00, 0x01, 0x00, 0x01, 0x00, 0x4A, 0x00, 0x01,
 	0x00, 0x03, 0x00, 0x4A, 0x00, 0x57, 0x00, 0x95
 };
+
+const float FontSizes::LargeHeaderFontSize = 32.0f;
+const float FontSizes::MediumHeaderFontSize = 28.0f;
+const float FontSizes::SmallHeaderFontSize = 24.0f;
+
+const float FontSizes::LargeBodyFontSize = 24.0f;
+const float FontSizes::MediumBodyFontSize = 20.0f;
+const float FontSizes::SmallBodyFontSize = 16.0f;
