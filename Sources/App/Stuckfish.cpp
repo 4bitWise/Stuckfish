@@ -1,5 +1,7 @@
 #include <Stuckfish.hpp>
+#include <UserCredentials.hpp>
 
+static Stuckfish::Core* current_instance = nullptr;
 
 static void glfw_error_callback(int error, const char* description)
 {
@@ -11,11 +13,15 @@ namespace Stuckfish
 	Core::Core(const WindowSpecs& win_specs)
 	{
 		Init();
+
+		current_instance = this;
 	}
 
 	Core::~Core()
 	{
 		Quit();
+
+		current_instance = nullptr;
 	}
 
 	void Core::Init()
@@ -27,30 +33,11 @@ namespace Stuckfish
 			return;
 		}
 
-		// Decide GL+GLSL versions
-#if defined(IMGUI_IMPL_OPENGL_ES2)
-	// GL ES 2.0 + GLSL 100
-		const char* glsl_version = "#version 100";
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-		glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
-#elif defined(__APPLE__)
-	// GL 3.2 + GLSL 150
-		const char* glsl_version = "#version 150";
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
-		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  // 3.2+ only
-		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // Required on Mac
-#else
-	// GL 3.0 + GLSL 130
 		const char* glsl_version = "#version 330";
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-		//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  // 3.2+ only
-		//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // 3.0+ only
-#endif
 
-		_window = glfwCreateWindow(1920, 1080, "Stuckfish global interface", nullptr, nullptr);
+		_window = glfwCreateWindow(_specs.width, _specs.height, _specs.name.c_str(), nullptr, nullptr);
 		if (_window == nullptr)
 			return;
 
@@ -71,8 +58,20 @@ namespace Stuckfish
 		// Load Fonts
 		ImFontConfig fontConfig;
 		fontConfig.FontDataOwnedByAtlas = true;
-		ImFont* robotoFont = io.Fonts->AddFontFromMemoryTTF((void*)roboto_regular, sizeof(roboto_regular), 18.0f);
-		io.FontDefault = robotoFont;
+		ImFontAtlas* fontAtlas = io.Fonts;
+
+		_robotoFontHeader = fontAtlas->AddFontFromMemoryTTF((void*)roboto_regular, sizeof(roboto_regular), 28.0f);
+		if (!_robotoFontHeader) {
+			std::cerr << "Failed to load header font!" << std::endl;
+			return;
+		}
+
+		_robotoFontBody = fontAtlas->AddFontFromMemoryTTF((void*)roboto_regular, sizeof(roboto_regular), 20.0f);
+		if (!_robotoFontBody) {
+			std::cerr << "Failed to load body font!" << std::endl;
+			return;
+		}
+		io.FontDefault = _robotoFontBody;
 
 		// Setup Platform/Renderer backends
 		ImGui_ImplGlfw_InitForOpenGL(_window, true);
@@ -94,32 +93,38 @@ namespace Stuckfish
 			{
 				glfwPollEvents();
 
+				/*for (auto& page : pageStack)
+					page->OnUpdate();*/
+
 				// Start the Dear ImGui frame
 				ImGui_ImplOpenGL3_NewFrame();
 				ImGui_ImplGlfw_NewFrame();
 				ImGui::NewFrame();
 
 				{
-					ImGui::ShowDemoWindow();
-					if (show_another_window)
+					//ImGui::ShowDemoWindow();
+
+					/*if (show_another_window)
 					{
 						ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
 						ImGui::Text("Hello from another window!");
 						if (ImGui::Button("Close Me"))
 							show_another_window = false;
 						ImGui::End();
-					}
+					}*/
+
+					for (auto& page : _pageStack)
+						page->OnUIRender();
 				}
 
 				ImGui::Render();
 
-				glViewport(0, 0, 1920, 1080);
+				glViewport(0, 0, _specs.width, _specs.height);
 				glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
 				glClear(GL_COLOR_BUFFER_BIT);
 				ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 				glfwSwapBuffers(_window);
 			}
-			_isRunning = false;
 	}
 
 	void Core::Quit()
@@ -132,9 +137,18 @@ namespace Stuckfish
 		glfwTerminate();
 	}
 
+	Core& Core::Get()
+	{
+		return *current_instance;
+	}
+
 	std::unique_ptr<Core> CreateApplication(int argc, char* argv[])
 	{
 		WindowSpecs specs;
-		return std::make_unique<Core>(specs);
+
+		std::unique_ptr<Core> app = std::make_unique<Core>(specs);
+
+		app->PushLayer<UserCredentials>();
+		return app;
 	}
 }
