@@ -8,7 +8,11 @@ namespace Stuckfish
 	{
 	public:
 		virtual ~Page() = default;
-		virtual void OnUpdate() {};
+		virtual void OnUpdate() = 0;
 		virtual void OnUIRender() = 0;
+
+	public:
+		bool _errorOccured = false;
+		std::string _errorMessage = "";
 	};
 }

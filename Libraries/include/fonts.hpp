@@ -1,6 +1,7 @@
 #pragma once
 
 extern unsigned char roboto_regular[168260];
+extern unsigned char roboto_medium[168644];
 
 class FontSizes
 {

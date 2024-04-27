@@ -51,11 +51,14 @@ namespace Stuckfish
 			_pageStack.emplace_back(std::make_shared<T>());
 		}
 
+		void DisplayErrorPopup(const char *error_message);
+
 	public:
 		bool _isRunning = true;
 
 		ImFont* _robotoFontHeader = nullptr;
 		ImFont* _robotoFontBody = nullptr;
+		ImFont* _robotoFontBodyMedium = nullptr;
 
 		WindowSpecs _specs;
 	private:

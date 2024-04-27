@@ -8,6 +8,7 @@ static void glfw_error_callback(int error, const char* description)
 	fprintf(stderr, "GLFW Error %d: %s\n", error, description);
 }
 
+
 namespace Stuckfish
 {
 	Core::Core(const WindowSpecs& win_specs)
@@ -71,6 +72,13 @@ namespace Stuckfish
 			std::cerr << "Failed to load body font!" << std::endl;
 			return;
 		}
+
+		_robotoFontBodyMedium = fontAtlas->AddFontFromMemoryTTF((void*)roboto_medium, sizeof(roboto_medium), 20.0f);
+		if (!_robotoFontBodyMedium) {
+			std::cerr << "Failed to load body medium font!" << std::endl;
+			return;
+		}
+
 		io.FontDefault = _robotoFontBody;
 
 		// Setup Platform/Renderer backends
@@ -93,9 +101,6 @@ namespace Stuckfish
 			{
 				glfwPollEvents();
 
-				/*for (auto& page : pageStack)
-					page->OnUpdate();*/
-
 				// Start the Dear ImGui frame
 				ImGui_ImplOpenGL3_NewFrame();
 				ImGui_ImplGlfw_NewFrame();
@@ -112,9 +117,12 @@ namespace Stuckfish
 							show_another_window = false;
 						ImGui::End();
 					}*/
-
 					for (auto& page : _pageStack)
+					{
 						page->OnUIRender();
+						if (page->_errorOccured)
+							DisplayErrorPopup(page->_errorMessage.c_str());
+					}
 				}
 
 				ImGui::Render();
@@ -150,5 +158,46 @@ namespace Stuckfish
 
 		app->PushLayer<UserCredentials>();
 		return app;
+	}
+
+	void Core::DisplayErrorPopup(const char *error_message)
+	{
+		// Calculate the position of the popup in the upper right corner
+		ImVec2 popupPos(_specs.width - ImGui::GetWindowSize().x / 2.8, 0);
+
+		ImGui::OpenPopup("Error Popup");
+		ImGui::SetNextWindowPos(popupPos, ImGuiCond_Always); // Set position relative to top right corner
+		if (ImGui::BeginPopup("Error Popup", ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove)) {
+			// Set the text color to red for the error message
+
+			ImGui::PushFont(_robotoFontBodyMedium);
+			ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "An error occurred");
+			ImGui::PopFont();
+			ImGui::Separator();
+			ImGui::Spacing();
+
+			ImGui::Text(error_message);
+
+			ImGui::SetCursorPosX(ImGui::GetWindowSize().x / 2 - 25);
+			if (ImGui::Button("OK", ImVec2(50, 0))) {
+				for (auto& page : _pageStack)
+				{
+					page->_errorOccured = false;
+					page->_errorMessage.clear();
+				}
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::EndPopup();
+		}
+
+		// Close popup when clicking outside of it
+		if (ImGui::IsMouseClicked(0) && !ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow)) {
+			for (auto& page : _pageStack)
+			{
+				page->_errorOccured = false;
+				page->_errorMessage.clear();
+			}
+			ImGui::CloseCurrentPopup();
+		}
 	}
 }
