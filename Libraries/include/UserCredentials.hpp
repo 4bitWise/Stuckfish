@@ -7,8 +7,8 @@ namespace Stuckfish
 	{
 	public:
 		UserCredentials(Core& app = Core::Get()) : _app(app) {}
-		void OnUIRender() override;
 		void OnUpdate() override;
+		void OnUIRender() override;
 	
 	private:
 		std::string _username = "";
