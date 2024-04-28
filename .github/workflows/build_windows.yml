@@ -24,4 +24,4 @@ jobs:
     - name: Build app for release
       run: |
         ls
-        msbuild -property:Configuration=Release Stuckfish.sln
+        msbuild -property:Configuration=Release -t:rebuild Stuckfish.sln
