@@ -1,11 +1,11 @@
-#include <UserCredentials.hpp>
+#include "../../Libraries/include/UserCredentials.hpp"
 
 namespace Stuckfish
 {
 	void UserCredentials::OnUIRender()
 	{
-		float windowWidth = (_app._specs.width / 2) - 390;
-		float windowHeight = (_app._specs.height / 2) - 120;
+		float windowWidth =  static_cast<float>(_app._specs.width / 2 - 390);
+		float windowHeight = static_cast<float>(_app._specs.height / 2 - 120);
 
 		ImVec2 buttonSize(200, 35);
 		ImVec2 windowPos(windowWidth, windowHeight);
@@ -16,7 +16,6 @@ namespace Stuckfish
 		ImGui::Begin("Background", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBringToFrontOnFocus);
 		ImVec2 contentRegion = ImGui::GetContentRegionAvail();
 
-		// Calculate the middle position of the window
 		ImVec2 windowMiddlePos = ImVec2(contentRegion.x / 2.0f, contentRegion.y / 2.0f);
 
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.0f);
@@ -30,17 +29,24 @@ namespace Stuckfish
 		ImGui::SetCursorPos(ImVec2(windowMiddlePos.x - 200, windowMiddlePos.y - 90));
 		ImGui::SetNextItemWidth(400);
 		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(10.0f, 10.0f));
-		_textChanged = ImGui::InputTextWithHint("##input", "Chess.com username...", &_useraccount);
+		_textChanged = ImGui::InputTextWithHint("##input", "Chess.com username...", &_username);
 		ImGui::PopStyleVar();
 
 		ImGui::SetCursorPos(ImVec2(windowMiddlePos.x - (buttonSize.x / 2.0f), windowMiddlePos.y - 40));
 		if (ImGui::Button("Confirm", buttonSize)) {
-			// Handle confirmation here
-			// Handle empty value error (Exceptions.hpp)
-			// Handle case when value can't be found (Exceptions.hpp)
-			std::cout << "Username: " << _useraccount << std::endl;
+			OnUpdate();
 		}
 		ImGui::PopStyleVar();
 		ImGui::End();
+	}
+
+	void UserCredentials::OnUpdate()
+	{
+		if (_username.empty())
+		{
+			_errorOccured = true;
+			_errorMessage = "Empty username.";
+		}
+		return;
 	}
 }
