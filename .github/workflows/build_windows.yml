@@ -22,4 +22,6 @@ jobs:
         msbuild-architecture: x64
     
     - name: Build app for release
-      run: msbuild -property:Configuration=Release Stuckfish.sln
+      run: |
+        ls
+        msbuild -property:Configuration=Release Stuckfish.vcxproj
