@@ -32,7 +32,7 @@
     <ClCompile Include="Sources\glad.cpp" />
     <ClCompile Include="Sources\Main.cpp" />
     <ClCompile Include="Sources\UI\fonts.cpp" />
-    <ClCompile Include="Sources\UI\UserCredentials.cpp" />
+    <ClCompile Include="Sources\UI\UserInfosPage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\imgui.h" />
@@ -49,7 +49,7 @@
     <ClInclude Include="Libraries\include\Logic.hpp" />
     <ClInclude Include="Libraries\include\Page.hpp" />
     <ClInclude Include="Libraries\include\Stuckfish.hpp" />
-    <ClInclude Include="Libraries\include\UserCredentials.hpp" />
+    <ClInclude Include="Libraries\include\UserInfosPage.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Roboto-Regular" />
