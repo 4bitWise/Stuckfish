@@ -1,4 +1,4 @@
-#include <Stuckfish.hpp>
+#include "../Libraries/include/Stuckfish.hpp"
 
 int main(int argc, char* argv[])
 {

@@ -1,5 +1,5 @@
-#include <Stuckfish.hpp>
-#include <UserCredentials.hpp>
+#include "../../Libraries/include/Stuckfish.hpp"
+#include "../../Libraries/include/UserCredentials.hpp"
 
 static Stuckfish::Core* current_instance = nullptr;
 
