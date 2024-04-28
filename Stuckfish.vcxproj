@@ -29,10 +29,10 @@
     <ClCompile Include="imgui\imgui_widgets.cpp" />
     <ClCompile Include="Sources\App\Logic.cpp" />
     <ClCompile Include="Sources\App\Stuckfish.cpp" />
-    <ClCompile Include="Sources\App\UserCredentials.cpp" />
     <ClCompile Include="Sources\glad.cpp" />
     <ClCompile Include="Sources\Main.cpp" />
     <ClCompile Include="Sources\UI\fonts.cpp" />
+    <ClCompile Include="Sources\UI\UserCredentials.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\imgui.h" />
