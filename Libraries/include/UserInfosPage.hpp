@@ -3,17 +3,18 @@
 
 namespace Stuckfish
 {
-	class UserCredentials : public Page
+	class UserInfosPage : public Page
 	{
 	public:
-		UserCredentials(Core& app = Core::Get()) : _app(app) {}
+		UserInfosPage(Core& app = Core::Get()) : _app(app) {}
 		void OnUpdate() override;
 		void OnUIRender() override;
 	
 	private:
+		Core&		_app;
 		std::string _username = "";
-		bool _textChanged = false;
-
-		Core& _app;
+		bool		_textChanged = false;
 	};
+
 }
+

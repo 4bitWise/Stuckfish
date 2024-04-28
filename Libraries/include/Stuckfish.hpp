@@ -26,6 +26,8 @@
 	#include "../emscripten/emscripten_mainloop_stub.h"
 #endif
 
+#define GLSL_VERSION "#version 330"
+
 namespace Stuckfish
 {
 	struct WindowSpecs
@@ -41,9 +43,9 @@ namespace Stuckfish
 		Core(const WindowSpecs& win_specs = WindowSpecs());
 		~Core();
 
-		void Run();
+		void Run(void);
 		
-		static Core& Get();
+		static Core& Get(void);
 		
 		template<typename T>
 		void PushLayer() {
@@ -52,6 +54,7 @@ namespace Stuckfish
 		}
 
 		void DisplayErrorPopup(const char *error_message);
+		void RemoveErrorPopup(void);
 
 	public:
 		bool _isRunning = true;
@@ -62,8 +65,8 @@ namespace Stuckfish
 
 		WindowSpecs _specs;
 	private:
-		void Init();
-		void Quit();
+		void Init(void);
+		void Quit(void);
 
 	private:
 		GLFWwindow* _window = nullptr;
