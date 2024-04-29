@@ -46,6 +46,15 @@ namespace Stuckfish
 			_errorOccured = true;
 			_errorMessage = ErrorsToString(Errors::EMPTY_USERNAME);
 		}
+
+		bool user_exists = _logic.IsChessComUser(_username);
+
+		if (!user_exists)
+		{
+			_errorOccured = true;
+			_errorMessage = ErrorsToString(Errors::USERNAME_NOT_FOUND);
+		}
+
 		return;
 	}
 }

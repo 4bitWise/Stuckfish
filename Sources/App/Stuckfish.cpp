@@ -129,8 +129,9 @@ namespace Stuckfish
 		WindowSpecs specs;
 
 		std::unique_ptr<Core> app = std::make_unique<Core>(specs);
+		Logic appLogic;
 
-		app->PushLayer<UserInfosPage>();
+		app->PushLayer<UserInfosPage>(Core::Get(), appLogic);
 		return app;
 	}
 
@@ -153,7 +154,7 @@ namespace Stuckfish
 			ImGui::Separator();
 			ImGui::Spacing();
 
-			ImGui::Text(error_message);
+			ImGui::TextWrapped(error_message);
 
 			ImGui::SetCursorPosX(ImGui::GetWindowSize().x / 2 - 25);
 			if (ImGui::Button("OK", ImVec2(popupConfirmButtonSizeX, popupConfirmButtonSizeY)))
