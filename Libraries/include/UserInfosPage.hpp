@@ -6,7 +6,7 @@ namespace Stuckfish
 	class UserInfosPage : public Page
 	{
 	public:
-		UserInfosPage(Core& app = Core::Get()) : _app(app) {}
+		UserInfosPage(Core& app, Logic& logic) : _app(app), Page(logic) {}
 		void OnUpdate() override;
 		void OnUIRender() override;
 	

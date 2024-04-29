@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Logic.hpp"
 #include <memory.h>
 
 namespace Stuckfish
@@ -29,7 +30,7 @@ namespace Stuckfish
 	enum class Errors
 	{
 		EMPTY_USERNAME,
-		INVALID_USERNAME
+		USERNAME_NOT_FOUND
 	};
 
 	inline const char* WindowTitlesToString(WindowTitle t) {
@@ -52,7 +53,7 @@ namespace Stuckfish
 	inline const char* ErrorsToString(Errors e) {
 		switch (e) {
 			case Errors::EMPTY_USERNAME:   return "Empty username.";
-			case Errors::INVALID_USERNAME: return "Apple";
+			case Errors::USERNAME_NOT_FOUND: return "Cannot find the username on Chess.com";
 			default:					   return "[Unknown Error]";
 		}
 	}
@@ -60,6 +61,7 @@ namespace Stuckfish
 	class Page
 	{
 	public:
+		Page(Logic& logic) : _logic(logic) {};
 		virtual ~Page() = default;
 		virtual void OnUpdate() = 0;
 		virtual void OnUIRender() = 0;
@@ -67,5 +69,8 @@ namespace Stuckfish
 	public:
 		bool _errorOccured = false;
 		std::string _errorMessage = "";
+	
+	protected:
+		Logic& _logic;
 	};
 }

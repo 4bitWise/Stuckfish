@@ -1,8 +1,24 @@
 #pragma once
 
-class Logic
+#include <iostream>
+#include <algorithm>
+#include <cpr/cpr.h>
+
+namespace Stuckfish
 {
-	// method to check if username exists on Chess.com
-	// method to fetch all the games played by the "specified" user in the month.
-};
+
+	enum HttpStatusCode
+	{
+		SUCCESS = 200,
+		UNAUTHORIZED = 401,
+	};
+
+	class Logic
+	{
+	public:
+		// method to check if username exists on Chess.com
+		bool IsChessComUser(const std::string& username);
+		// method to fetch all the games played by the "specified" user in the month.
+	};
+}
 

@@ -47,10 +47,15 @@ namespace Stuckfish
 		
 		static Core& Get(void);
 		
-		template<typename T>
-		void PushLayer() {
+		template<typename T, typename... Args>
+		void PushLayer(Args&&... args) {
 			static_assert(std::is_base_of<Page, T>::value, "Pushed type is not subclass of Page!");
-			_pageStack.emplace_back(std::make_shared<T>());
+			_pageStack.emplace_back(std::make_shared<T>(std::forward<Args>(args)...));
+		}
+
+		template<typename T>
+		T& GetLayer() {
+			return dynamic_cast<T&>(*(_pageStack.back()));
 		}
 
 		void DisplayErrorPopup(const char *error_message);
