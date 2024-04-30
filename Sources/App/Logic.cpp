@@ -15,6 +15,7 @@ namespace Stuckfish
 
         if (res.status_code == HttpStatusCode::SUCCESS)
         {
+            std::cout << res.text;
             return true;
         }
         return false;

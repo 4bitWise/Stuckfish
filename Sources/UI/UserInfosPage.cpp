@@ -54,7 +54,6 @@ namespace Stuckfish
 			_errorOccured = true;
 			_errorMessage = ErrorsToString(Errors::USERNAME_NOT_FOUND);
 		}
-
 		return;
 	}
 }
