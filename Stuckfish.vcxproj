@@ -33,6 +33,7 @@
     <ClCompile Include="Sources\glad.cpp" />
     <ClCompile Include="Sources\Main.cpp" />
     <ClCompile Include="Sources\UI\fonts.cpp" />
+    <ClCompile Include="Sources\UI\GamesPlayed.cpp" />
     <ClCompile Include="Sources\UI\UserInfosPage.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -47,6 +48,7 @@
     <ClInclude Include="Libraries\emscripten\emscripten_mainloop_stub.h" />
     <ClInclude Include="Libraries\include\Exceptions.hpp" />
     <ClInclude Include="Libraries\include\fonts.hpp" />
+    <ClInclude Include="Libraries\include\GamesPlayedPage.hpp" />
     <ClInclude Include="Libraries\include\Logic.hpp" />
     <ClInclude Include="Libraries\include\Page.hpp" />
     <ClInclude Include="Libraries\include\Stuckfish.hpp" />
