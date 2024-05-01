@@ -20,7 +20,10 @@ jobs:
       uses: microsoft/setup-msbuild@v2
       with:
         msbuild-architecture: x64
-    
+
+    - name: Restore NuGet packages
+      run: nuget restore Stuckfish.sln
+      
     - name: Build app for release
       run: |
         ls
