@@ -18,6 +18,7 @@ namespace Stuckfish
 	{
 		USERINFO_PAGE,
 		LOADING_PAGE,
+		GAMESPLAYED_PAGE,
 		ERROR_POPUP
 	};
 
@@ -37,6 +38,7 @@ namespace Stuckfish
 		switch (t) {
 			case WindowTitle::USERINFO_PAGE:	return "User Info Page";
 			case WindowTitle::LOADING_PAGE:		return "Loading Page";
+			case WindowTitle::GAMESPLAYED_PAGE: return "Games Played Page";
 			case WindowTitle::ERROR_POPUP:		return "Error Popup";
 			default:							return "[Unknown Page]";
 		}
@@ -65,10 +67,13 @@ namespace Stuckfish
 		virtual ~Page() = default;
 		virtual void OnUpdate() = 0;
 		virtual void OnUIRender() = 0;
+		virtual void OnAttach() = 0;
+		virtual void OnDetach() = 0;
 
 	public:
 		bool _errorOccured = false;
 		std::string _errorMessage = "";
+		//int _pageId;
 	
 	protected:
 		Logic& _logic;

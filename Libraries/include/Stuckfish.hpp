@@ -28,6 +28,7 @@
 
 #define GLSL_VERSION "#version 330"
 
+
 namespace Stuckfish
 {
 	struct WindowSpecs
@@ -55,7 +56,12 @@ namespace Stuckfish
 
 		template<typename T>
 		T& GetLayer() {
-			return dynamic_cast<T&>(*(_pageStack.back()));
+			return dynamic_cast<T&>(*(_pageStack.front()));
+		}
+
+		std::vector<std::shared_ptr<Page>>& GetPageStack(void)
+		{
+			return _pageStack;
 		}
 
 		void DisplayErrorPopup(const char *error_message);

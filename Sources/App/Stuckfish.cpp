@@ -1,5 +1,6 @@
 #include "../../Libraries/include/Stuckfish.hpp"
 #include "../../Libraries/include/UserInfosPage.hpp"
+#include "../../Libraries/include/GamesPlayedPage.hpp"
 
 static Stuckfish::Core* current_instance = nullptr;
 
@@ -91,12 +92,10 @@ namespace Stuckfish
 				ImGui::NewFrame();
 
 				{
-					for (auto& page : _pageStack)
-					{
-						page->OnUIRender();
-						if (page->_errorOccured)
-							DisplayErrorPopup(page->_errorMessage.c_str());
-					}
+					
+					_pageStack.front()->OnUIRender();
+					if (_pageStack.front()->_errorOccured)
+						DisplayErrorPopup(_pageStack.front()->_errorMessage.c_str());
 				}
 
 				ImGui::Render();
@@ -115,6 +114,9 @@ namespace Stuckfish
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
 
+		// Clear page stack
+		_pageStack.clear();
+
 		glfwDestroyWindow(_window);
 		glfwTerminate();
 	}
@@ -132,6 +134,8 @@ namespace Stuckfish
 		Logic appLogic;
 
 		app->PushLayer<UserInfosPage>(Core::Get(), appLogic);
+		app->PushLayer<GamesPlayedPage>(Core::Get(), appLogic);
+
 		return app;
 	}
 

@@ -1,9 +1,11 @@
 #include "../../Libraries/include/UserInfosPage.hpp"
+#include "../../Libraries/include/GamesPlayedPage.hpp"
 
 namespace Stuckfish
 {
 	void UserInfosPage::OnUIRender()
 	{
+		
 		float centeredWindowPosX =  static_cast<float>(_app._specs.width / 2 - 390);
 		float centeredWindowPosY = static_cast<float>(_app._specs.height / 2 - 120);
 
@@ -19,6 +21,7 @@ namespace Stuckfish
 
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, roundingValue);
 
+		// page title
 		ImGui::PushFont(_app._robotoFontHeader);
 		ImGui::SetCursorPos(ImVec2(windowMiddlePos.x - 225, windowMiddlePos.y - 140));
 		ImGui::Text("Please provide your Chess.com username");
@@ -45,6 +48,7 @@ namespace Stuckfish
 		{
 			_errorOccured = true;
 			_errorMessage = ErrorsToString(Errors::EMPTY_USERNAME);
+			return;
 		}
 
 		bool user_exists = _logic.IsChessComUser(_username);
@@ -53,7 +57,25 @@ namespace Stuckfish
 		{
 			_errorOccured = true;
 			_errorMessage = ErrorsToString(Errors::USERNAME_NOT_FOUND);
+			return;
 		}
+
+		_app.GetLayer<UserInfosPage>().OnDetach();
+		return;
+	}
+
+	void UserInfosPage::OnAttach()
+	{
+		_app.PushLayer<UserInfosPage>(_app, _logic);
+	}
+
+	void UserInfosPage::OnDetach()
+	{
+		std::vector<std::shared_ptr<Page>>& pageStack = _app.GetPageStack();
+
+		if (!pageStack.empty())
+			pageStack.erase(pageStack.begin());
+
 		return;
 	}
 }
