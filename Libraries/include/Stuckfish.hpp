@@ -54,10 +54,10 @@ namespace Stuckfish
 			_pageStack.emplace_back(std::make_shared<T>(std::forward<Args>(args)...));
 		}
 
-		template<typename T>
+		/*template<typename T>
 		T& GetLayer() {
 			return dynamic_cast<T&>(*(_pageStack.front()));
-		}
+		}*/
 
 		std::vector<std::shared_ptr<Page>>& GetPageStack(void)
 		{
@@ -68,8 +68,6 @@ namespace Stuckfish
 		void RemoveErrorPopup(void);
 
 	public:
-		bool _isRunning = true;
-
 		ImFont* _robotoFontHeader = nullptr;
 		ImFont* _robotoFontBody = nullptr;
 		ImFont* _robotoFontBodyMedium = nullptr;
@@ -87,5 +85,5 @@ namespace Stuckfish
 		std::vector<std::shared_ptr<Page>> _pageStack;
 	};
 
-	std::unique_ptr<Core> CreateApplication(int argc, char* argv[]);
+	std::unique_ptr<Core> CreateApplication(void);
 };

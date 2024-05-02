@@ -76,34 +76,15 @@ namespace Stuckfish
 	class Page
 	{
 	public:
-		//static Page& GetInstance(Core& app, Logic& logic);
-		
+
 		virtual ~Page() = default; // virtual destructor as the class will be inherited.
 		virtual void OnUpdate() {};
 		virtual void OnUIRender() {};
 		virtual void OnAttach() {};
 		virtual void OnDetach() {};
 
-		/*Page(const Page&) = delete;
-		void operator=(const Page&) = delete;
-
-		Page(Page&&) noexcept = default;
-		Page& operator=(Page&&) noexcept = default;
-
-		std::string& GetUsername(void)
-		{
-			return _username;
-		}*/
-
 	public:
 		bool _errorOccured = false;
-		std::string _errorMessage = "";
-	
-	protected:
-		//Page(Core& app, Logic& logic);
-		//Core& _app;
-		//Logic& _logic;
-
-		//std::string _username = "";
+		std::string _errorMessage = "";	
 	};
 }

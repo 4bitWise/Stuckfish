@@ -13,8 +13,11 @@ namespace Stuckfish
 
 		ImGui::SetNextWindowPos(windowPos, ImGuiCond_Always);
 		ImGui::SetNextWindowSize(ImVec2(static_cast<float>(_app._specs.width) / 2, static_cast<float>(_app._specs.height) / 2), ImGuiCond_Always);
+		ImGui::Begin(WindowTitlesToString(WindowTitle::USERINFO_PAGE), NULL, ImGuiWindowFlags_NoTitleBar |
+			ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBackground |
+			ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
+			ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBringToFrontOnFocus);
 
-		ImGui::Begin(WindowTitlesToString(WindowTitle::USERINFO_PAGE), NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBringToFrontOnFocus);
 		ImVec2 contentRegion = ImGui::GetContentRegionAvail();
 		ImVec2 windowMiddlePos = ImVec2(contentRegion.x / 2.0f, contentRegion.y / 2.0f);
 
@@ -44,7 +47,6 @@ namespace Stuckfish
 	void UserInfosPage::OnUpdate()
 	{
 		//std::string& username = _activeSession.GetUsername();
-
 		if (_userdata.username.empty())
 		{
 			_errorOccured = true;
@@ -52,7 +54,7 @@ namespace Stuckfish
 			return;
 		}
 
-		bool user_exists = _logic.IsChessComUser(_userdata.username);
+		bool user_exists = _logic.IsChessDotComUser(_userdata.username);
 
 		if (!user_exists)
 		{
@@ -61,7 +63,7 @@ namespace Stuckfish
 			return;
 		}
 
-		_app.GetLayer<UserInfosPage>().OnDetach();
+		OnDetach();
 		return;
 	}
 

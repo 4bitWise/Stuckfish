@@ -8,7 +8,7 @@ static std::string to_lower(std::string s) {
 
 namespace Stuckfish
 {
-	bool Logic::IsChessComUser(const std::string& username)
+	bool Logic::IsChessDotComUser(const std::string& username)
 	{
         std::string url = "https://api.chess.com/pub/player/" + to_lower(username);
         cpr::Response res = cpr::Get(cpr::Url{ url });

@@ -77,39 +77,36 @@ namespace Stuckfish
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
 		ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
-		#ifdef __EMSCRIPTEN__
-			io.IniFilename = nullptr;
-			EMSCRIPTEN_MAINLOOP_BEGIN
-		#else
-			while (!glfwWindowShouldClose(_window))
-		#endif
+		while (!glfwWindowShouldClose(_window))
+		{
+			glfwPollEvents();
+
+			// Start the Dear ImGui frame
+			ImGui_ImplOpenGL3_NewFrame();
+			ImGui_ImplGlfw_NewFrame();
+			ImGui::NewFrame();
+
 			{
-				glfwPollEvents();
-
-				// Start the Dear ImGui frame
-				ImGui_ImplOpenGL3_NewFrame();
-				ImGui_ImplGlfw_NewFrame();
-				ImGui::NewFrame();
-
-				{
 					
-					_pageStack.front()->OnUIRender();
-					if (_pageStack.front()->_errorOccured)
-						DisplayErrorPopup(_pageStack.front()->_errorMessage.c_str());
-				}
-
-				ImGui::Render();
-
-				glViewport(0, 0, _specs.width, _specs.height);
-				glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
-				glClear(GL_COLOR_BUFFER_BIT);
-				ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-				glfwSwapBuffers(_window);
+				_pageStack.front()->OnUIRender();
+				if (_pageStack.front()->_errorOccured)
+					DisplayErrorPopup(_pageStack.front()->_errorMessage.c_str());
 			}
+
+			ImGui::Render();
+
+			glViewport(0, 0, _specs.width, _specs.height);
+			glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
+			glClear(GL_COLOR_BUFFER_BIT);
+			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+			glfwSwapBuffers(_window);
+		}
 	}
 
 	void Core::Quit(void)
 	{
+		//for (auto& page : _pageStack)
+			//page.reset();
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
@@ -126,16 +123,15 @@ namespace Stuckfish
 		return *current_instance;
 	}
 
-	std::unique_ptr<Core> CreateApplication(int argc, char* argv[])
+	std::unique_ptr<Core> CreateApplication(void)
 	{
 		WindowSpecs specs;
 
 		std::unique_ptr<Core> app = std::make_unique<Core>(specs);
-		//Page& page = Page::GetInstance(Core::Get(), appLogic);
 
-		app->PushLayer<UserInfosPage>(Core::Get(), app->_appLogic, app->_userData);
+		app->PushLayer<UserInfosPage>(Core::Get(), app->_appLogic, app-> _userData);
 		app->PushLayer<GamesPlayedPage>(Core::Get(), app->_appLogic, app->_userData);
-		
+
 		return app;
 	}
 
