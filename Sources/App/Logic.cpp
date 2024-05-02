@@ -11,7 +11,7 @@ namespace Stuckfish
 	bool Logic::IsChessComUser(const std::string& username)
 	{
         std::string url = "https://api.chess.com/pub/player/" + to_lower(username);
-        cpr::Response res = cpr::Get(cpr::Url{url});
+        cpr::Response res = cpr::Get(cpr::Url{ url });
 
         if (res.status_code == HttpStatusCode::SUCCESS)
         {
@@ -20,4 +20,17 @@ namespace Stuckfish
         }
         return false;
 	}
+
+    void Logic::GamesPlayedWithinPeriod(const std::string& username, const std::string& year, const std::string& month)
+    {
+        std::string url = "https://api.chess.com/pub/player/" + to_lower(username) + "/games/" + year + '/' + month;
+
+        cpr::Response res = cpr::Get(cpr::Url{ url });
+
+        if (res.status_code == HttpStatusCode::SUCCESS)
+        {
+            std::cout << res.text;
+        }
+        return;
+    }
 }

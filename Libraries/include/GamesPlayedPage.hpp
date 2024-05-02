@@ -7,8 +7,9 @@ namespace Stuckfish
 	class GamesPlayedPage : public Page
 	{
 	public:
-		GamesPlayedPage(Core& app, Logic& logic) : _app(app), Page(logic)
-		{}
+		GamesPlayedPage(Core& app, Logic& logic, UserData& userData) : _app(app), _logic(logic), _userdata(userData)
+		{};
+
 		void OnUpdate() override;
 		void OnUIRender() override;
 		void OnAttach() override;
@@ -16,8 +17,7 @@ namespace Stuckfish
 
 	private:
 		Core& _app;
-		std::string _username = "";
-		bool		_textChanged = false;
+		Logic& _logic;
+		UserData& _userdata;
 	};
-
 }

@@ -1,4 +1,4 @@
-#include "Stuckfish.hpp"
+#include "Page.hpp"
 #include "Exceptions.hpp"
 
 namespace Stuckfish
@@ -6,18 +6,18 @@ namespace Stuckfish
 	class UserInfosPage : public Page
 	{
 	public:
-		UserInfosPage(Core& app, Logic& logic) : _app(app), Page(logic)
+		UserInfosPage(Core& app, Logic& logic, UserData& userData) : _app(app), _logic(logic), _userdata(userData)
 		{}
+
 		void OnUpdate() override;
 		void OnUIRender() override;
 		void OnAttach() override;
 		void OnDetach() override;
-	
-	private:
-		Core&		_app;
-		std::string _username = "";
-		bool		_textChanged = false;
-	};
 
+	private:
+		Core& _app;
+		Logic& _logic;
+		UserData& _userdata;
+	};
 }
 

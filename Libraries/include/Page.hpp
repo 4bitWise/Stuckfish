@@ -5,6 +5,11 @@
 
 namespace Stuckfish
 {
+	class Core;
+}
+
+namespace Stuckfish
+{
 	const float confirmButtonSizeX = 200.0f;
 	const float confirmButtonSizeY = 35.0f;
 	const float popupConfirmButtonSizeX = 50.0f;
@@ -60,22 +65,45 @@ namespace Stuckfish
 		}
 	}
 
+	struct UserData
+	{
+		UserData(const std::string& name = "") : username(name)
+		{};
+
+		std::string username;
+	};
+
 	class Page
 	{
 	public:
-		Page(Logic& logic) : _logic(logic) {};
-		virtual ~Page() = default;
-		virtual void OnUpdate() = 0;
-		virtual void OnUIRender() = 0;
-		virtual void OnAttach() = 0;
-		virtual void OnDetach() = 0;
+		//static Page& GetInstance(Core& app, Logic& logic);
+		
+		virtual ~Page() = default; // virtual destructor as the class will be inherited.
+		virtual void OnUpdate() {};
+		virtual void OnUIRender() {};
+		virtual void OnAttach() {};
+		virtual void OnDetach() {};
+
+		/*Page(const Page&) = delete;
+		void operator=(const Page&) = delete;
+
+		Page(Page&&) noexcept = default;
+		Page& operator=(Page&&) noexcept = default;
+
+		std::string& GetUsername(void)
+		{
+			return _username;
+		}*/
 
 	public:
 		bool _errorOccured = false;
 		std::string _errorMessage = "";
-		//int _pageId;
 	
 	protected:
-		Logic& _logic;
+		//Page(Core& app, Logic& logic);
+		//Core& _app;
+		//Logic& _logic;
+
+		//std::string _username = "";
 	};
 }

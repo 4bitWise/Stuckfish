@@ -5,7 +5,6 @@ namespace Stuckfish
 {
 	void UserInfosPage::OnUIRender()
 	{
-		
 		float centeredWindowPosX =  static_cast<float>(_app._specs.width / 2 - 390);
 		float centeredWindowPosY = static_cast<float>(_app._specs.height / 2 - 120);
 
@@ -31,7 +30,7 @@ namespace Stuckfish
 		ImGui::SetCursorPos(ImVec2(windowMiddlePos.x - 200, windowMiddlePos.y - 90));
 		ImGui::SetNextItemWidth(inputFieldWidth);
 		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(10.0f, 10.0f));
-		_textChanged = ImGui::InputTextWithHint("##input", "Chess.com username...", &_username);
+		ImGui::InputTextWithHint("##input", "Chess.com username...", &_userdata.username);
 		ImGui::PopStyleVar();
 
 		ImGui::SetCursorPos(ImVec2(windowMiddlePos.x - (buttonSize.x / 2.0f), windowMiddlePos.y - 40));
@@ -44,14 +43,16 @@ namespace Stuckfish
 
 	void UserInfosPage::OnUpdate()
 	{
-		if (_username.empty())
+		//std::string& username = _activeSession.GetUsername();
+
+		if (_userdata.username.empty())
 		{
 			_errorOccured = true;
 			_errorMessage = ErrorsToString(Errors::EMPTY_USERNAME);
 			return;
 		}
 
-		bool user_exists = _logic.IsChessComUser(_username);
+		bool user_exists = _logic.IsChessComUser(_userdata.username);
 
 		if (!user_exists)
 		{
@@ -66,7 +67,7 @@ namespace Stuckfish
 
 	void UserInfosPage::OnAttach()
 	{
-		_app.PushLayer<UserInfosPage>(_app, _logic);
+		_app.PushLayer<UserInfosPage>(_app, _logic, _userdata);
 	}
 
 	void UserInfosPage::OnDetach()

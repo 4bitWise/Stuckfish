@@ -75,6 +75,8 @@ namespace Stuckfish
 		ImFont* _robotoFontBodyMedium = nullptr;
 
 		WindowSpecs _specs;
+		Logic _appLogic;
+		UserData _userData;
 	private:
 		void Init(void);
 		void Quit(void);

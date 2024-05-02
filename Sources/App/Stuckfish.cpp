@@ -131,11 +131,11 @@ namespace Stuckfish
 		WindowSpecs specs;
 
 		std::unique_ptr<Core> app = std::make_unique<Core>(specs);
-		Logic appLogic;
+		//Page& page = Page::GetInstance(Core::Get(), appLogic);
 
-		app->PushLayer<UserInfosPage>(Core::Get(), appLogic);
-		app->PushLayer<GamesPlayedPage>(Core::Get(), appLogic);
-
+		app->PushLayer<UserInfosPage>(Core::Get(), app->_appLogic, app->_userData);
+		app->PushLayer<GamesPlayedPage>(Core::Get(), app->_appLogic, app->_userData);
+		
 		return app;
 	}
 
