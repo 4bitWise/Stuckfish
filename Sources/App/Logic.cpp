@@ -1,18 +1,21 @@
 #include "../../Libraries/include/Logic.hpp"
 
-static std::string to_lower(std::string s) {
+static std::string to_lower(std::string s)
+{
     std::transform(s.begin(), s.end(), s.begin(), [](char c) { return std::tolower(c); });
     return s;
 }
 
-static std::string extractString(const Value& jsonObject, const std::string& fieldName) {
+static std::string extractString(const Value& jsonObject, const std::string& fieldName)
+{
     if (jsonObject.HasMember(fieldName.c_str()) && jsonObject[fieldName.c_str()].IsString()) {
         return jsonObject[fieldName.c_str()].GetString();
     }
     return ""; // Return empty string if field not found or not a string
 }
 
-static std::string extractInt(const Value& jsonObject, const std::string& fieldName) {
+static std::string extractInt(const Value& jsonObject, const std::string& fieldName)
+{
     if (jsonObject.HasMember(fieldName.c_str()) && jsonObject[fieldName.c_str()].IsInt()) {
         return std::to_string(jsonObject[fieldName.c_str()].GetInt());
     }
@@ -27,23 +30,18 @@ namespace Stuckfish
         cpr::Response res = cpr::Get(cpr::Url{ url });
 
         if (res.status_code == cpr::status::HTTP_OK)
-        {
             return true;
-        }
         return false;
 	}
 
     void Logic::GetInfosFromListOfGamesPlayed(const std::string& username, const Document& doc)
     {
         // Check if parsing succeeded
-        if (!doc.HasParseError())
-        {
-            if (doc.HasMember("games") && doc["games"].IsArray())
-            {
+        if (!doc.HasParseError()) {
+            if (doc.HasMember("games") && doc["games"].IsArray()) {
                 const Value& gamesArray = doc["games"];
 
-                if (gamesArray.Empty())
-                {
+                if (gamesArray.Empty()) {
                     // display on the window "No games found"
                     // Log in the local console the same thing
                     std::cout << "No games found !\n";
@@ -98,24 +96,18 @@ namespace Stuckfish
     void Logic::GamesPlayedWithinPeriod(const std::string& username, const std::string& year, const std::string& month)
     {
         std::string url = "https://api.chess.com/pub/player/" + to_lower(username) + "/games/" + year + '/' + month;
-
         cpr::Response res = cpr::Get(cpr::Url{ url });
 
-        if (res.status_code == cpr::status::HTTP_OK)
-        {
+        if (res.status_code == cpr::status::HTTP_OK) {
             Document doc;
             doc.Parse(res.text.c_str());
-
             GetInfosFromListOfGamesPlayed(username, doc);
-        }
-        else
-        {
+        } else {
             std::cerr << "Request failed with status code: " << res.status_code << std::endl;
             return;
         }
 
-        for (auto g : _gamesData)
-        {
+        for (auto g : _gamesData) {
             std::cout << "White username: " << g.whiteUsername << '(' << g.whiteRating << ")\n";
             std::cout << "Black username: " << g.blackUsername << '(' << g.blackRating << ")\n";
             std::cout << "Game Result: " << g.gameResult << "\n\n";
