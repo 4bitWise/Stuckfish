@@ -1,30 +1,33 @@
 #include "../../Libraries/include/Logic.hpp"
 
-static std::string to_lower(std::string s)
+static std::string
+to_lower(std::string s)
 {
-    std::transform(s.begin(), s.end(), s.begin(), [](char c) { return std::tolower(c); });
+    std::transform(s.begin(), s.end(), s.begin(), [](char c)
+        { return std::tolower(c); });
     return s;
 }
 
-static std::string extractString(const Value& jsonObject, const std::string& fieldName)
+static std::string
+extractString(const Value& jsonObject, const std::string& fieldName)
 {
-    if (jsonObject.HasMember(fieldName.c_str()) && jsonObject[fieldName.c_str()].IsString()) {
+    if (jsonObject.HasMember(fieldName.c_str()) && jsonObject[fieldName.c_str()].IsString())
         return jsonObject[fieldName.c_str()].GetString();
-    }
-    return ""; // Return empty string if field not found or not a string
+    return "";
 }
 
-static std::string extractInt(const Value& jsonObject, const std::string& fieldName)
+static std::string
+extractInt(const Value& jsonObject, const std::string& fieldName)
 {
-    if (jsonObject.HasMember(fieldName.c_str()) && jsonObject[fieldName.c_str()].IsInt()) {
+    if (jsonObject.HasMember(fieldName.c_str()) && jsonObject[fieldName.c_str()].IsInt())
         return std::to_string(jsonObject[fieldName.c_str()].GetInt());
-    }
-    return ""; // Return empty string if field not found or not a string
+    return "";
 }
 
 namespace Stuckfish
 {
-	bool Logic::IsChessDotComUser(const std::string& username)
+	bool
+    Logic::IsChessDotComUser(const std::string& username)
 	{
         std::string url = "https://api.chess.com/pub/player/" + to_lower(username);
         cpr::Response res = cpr::Get(cpr::Url{ url });
@@ -34,7 +37,8 @@ namespace Stuckfish
         return false;
 	}
 
-    void Logic::GetInfosFromListOfGamesPlayed(const std::string& username, const Document& doc)
+    void
+    Logic::GetInfosFromListOfGamesPlayed(const std::string& username, const Document& doc)
     {
         // Check if parsing succeeded
         if (!doc.HasParseError()) {
@@ -93,7 +97,8 @@ namespace Stuckfish
         }
     }
 
-    void Logic::GamesPlayedWithinPeriod(const std::string& username, const std::string& year, const std::string& month)
+    void
+    Logic::GamesPlayedWithinPeriod(const std::string& username, const std::string& year, const std::string& month)
     {
         std::string url = "https://api.chess.com/pub/player/" + to_lower(username) + "/games/" + year + '/' + month;
         cpr::Response res = cpr::Get(cpr::Url{ url });
