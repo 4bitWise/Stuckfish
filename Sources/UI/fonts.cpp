@@ -1,5 +1,13 @@
+/******************************************************************************
+ * File:        Fonts.cpp
+ * Authors:     see AUTHORS file
+ *****************************************************************************/
+
 #include "../../Libraries/include/fonts.hpp"
 
+//------------------------------------------------------------------------------
+/**
+*/
 unsigned char roboto_regular[168260] = {
 	0x00, 0x01, 0x00, 0x00, 0x00, 0x12, 0x01, 0x00, 0x00, 0x04, 0x00, 0x20,
 	0x47, 0x44, 0x45, 0x46, 0xB4, 0x42, 0xB0, 0x82, 0x00, 0x02, 0x1B, 0x84,
@@ -14025,6 +14033,9 @@ unsigned char roboto_regular[168260] = {
 	0x00, 0x03, 0x00, 0x4A, 0x00, 0x57, 0x00, 0x95
 };
 
+//------------------------------------------------------------------------------
+/**
+*/
 const float FontSizes::LargeHeaderFontSize = 32.0f;
 const float FontSizes::MediumHeaderFontSize = 28.0f;
 const float FontSizes::SmallHeaderFontSize = 24.0f;
@@ -14033,6 +14044,9 @@ const float FontSizes::LargeBodyFontSize = 24.0f;
 const float FontSizes::MediumBodyFontSize = 20.0f;
 const float FontSizes::SmallBodyFontSize = 16.0f;
 
+//------------------------------------------------------------------------------
+/**
+*/
 unsigned char roboto_medium[168644] = {
 	0x00, 0x01, 0x00, 0x00, 0x00, 0x12, 0x01, 0x00, 0x00, 0x04, 0x00, 0x20,
 	0x47, 0x44, 0x45, 0x46, 0xB4, 0x42, 0xB0, 0x82, 0x00, 0x02, 0x15, 0xA0,

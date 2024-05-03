@@ -1,3 +1,8 @@
+/******************************************************************************
+ * File:        Main.cpp
+ * Authors:     see AUTHORS file
+ *****************************************************************************/
+
 #include "../Libraries/include/Stuckfish.hpp"
 
 int main(int argc, char* argv[])

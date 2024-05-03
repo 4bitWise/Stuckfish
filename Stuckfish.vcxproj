@@ -32,7 +32,7 @@
     <ClCompile Include="Sources\App\Stuckfish.cpp" />
     <ClCompile Include="Sources\glad.cpp" />
     <ClCompile Include="Sources\Main.cpp" />
-    <ClCompile Include="Sources\UI\fonts.cpp" />
+    <ClCompile Include="Sources\UI\Fonts.cpp" />
     <ClCompile Include="Sources\UI\GamesPlayedPage.cpp" />
     <ClCompile Include="Sources\UI\UserInfosPage.cpp" />
   </ItemGroup>

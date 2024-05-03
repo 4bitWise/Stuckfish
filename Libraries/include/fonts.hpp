@@ -1,3 +1,10 @@
+/******************************************************************************
+ * File:        fonts.hpp
+ * Authors:     see AUTHORS file
+ * Date:        May 3, 2024
+ * Description: This file contains all the data related to the fonts we are using
+ *****************************************************************************/
+
 #pragma once
 
 extern unsigned char roboto_regular[168260];

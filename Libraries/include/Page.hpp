@@ -1,3 +1,10 @@
+/******************************************************************************
+ * File:        Page.hpp
+ * Authors:     see AUTHORS file
+ * Date:        May 3, 2024
+ * Description: Page was meant to be an interface for other pages...
+ *****************************************************************************/
+
 #pragma once
 
 #include "Logic.hpp"

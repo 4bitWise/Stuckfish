@@ -1,3 +1,10 @@
+/******************************************************************************
+ * File:        UserInfosPage.hpp
+ * Authors:     see AUTHORS file
+ * Date:        May 3, 2024
+ * Description: This file contains the required methods to render the 1st page
+ *****************************************************************************/
+
 #include "Page.hpp"
 #include "Exceptions.hpp"
 

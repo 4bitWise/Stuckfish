@@ -1,3 +1,10 @@
+/******************************************************************************
+ * File:        Stuckfish.hpp
+ * Authors:     see AUTHORS file
+ * Date:        May 3, 2024
+ * Description: This file contains the Core class and setup methods
+ *****************************************************************************/
+
 #pragma once
 
 #include <string>

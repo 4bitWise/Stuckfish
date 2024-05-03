@@ -1,3 +1,10 @@
+/******************************************************************************
+ * File:        Logic.hpp
+ * Authors:     see AUTHORS file
+ * Date:        May 3, 2024
+ * Description: This file contains the API requests methods
+ *****************************************************************************/
+
 #pragma once
 
 #include <iostream>
