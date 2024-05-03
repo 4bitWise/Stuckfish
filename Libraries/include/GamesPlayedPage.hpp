@@ -19,5 +19,7 @@ namespace Stuckfish
 		Core& _app;
 		Logic& _logic;
 		UserData& _userdata;
+
+		bool _hasRetrievedGames = false;
 	};
 }

@@ -29,8 +29,11 @@ namespace Stuckfish
 		// the player and his ELO and same for the opponent, the game status for the player (win/lose/draw)
 		// the game time control (rapid, blitz, bullet)
 		//std::cout << "\nUsername: " << _username << std;;
-		_logic.GamesPlayedWithinPeriod(_userdata.username , "2024", "04");
-
+		if (!_hasRetrievedGames)
+		{
+			_logic.GamesPlayedWithinPeriod(_userdata.username, "2024", "05");
+			_hasRetrievedGames = true;
+		}
 		// games list
 		if (ImGui::Button("Button 1", buttonSize))
 		{
