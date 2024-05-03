@@ -26,16 +26,16 @@ extractInt(const Value& jsonObject, const std::string& fieldName)
 
 namespace Stuckfish
 {
-	bool
-	Logic::IsChessDotComUser(const std::string& username)
-	{
+    bool
+    Logic::IsChessDotComUser(const std::string& username)
+    {
         std::string url = "https://api.chess.com/pub/player/" + to_lower(username);
         cpr::Response res = cpr::Get(cpr::Url{ url });
 
         if (res.status_code == cpr::status::HTTP_OK)
             return true;
         return false;
-	}
+    }
 
     void
     Logic::GetInfosFromListOfGamesPlayed(const std::string& username, const Document& doc)
