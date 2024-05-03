@@ -27,7 +27,7 @@ extractInt(const Value& jsonObject, const std::string& fieldName)
 namespace Stuckfish
 {
 	bool
-    Logic::IsChessDotComUser(const std::string& username)
+	Logic::IsChessDotComUser(const std::string& username)
 	{
         std::string url = "https://api.chess.com/pub/player/" + to_lower(username);
         cpr::Response res = cpr::Get(cpr::Url{ url });
