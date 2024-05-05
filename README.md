@@ -8,16 +8,16 @@ Stuckfish will be directly available through releases. Simply download the lates
 
 ## **Features (Work in Progress)**
 
-- [] Fetch and display all games played this month via [Chess.com](http://chess.com/) API.
-- [] Navigate to previous months' games with a "<" button.
-- [] Load selected game onto the board by clicking on it.
-- [] Receive notification when game analysis is complete.
-- [] Adjust Stockfish analysis depth.
-- [] Easily navigate moves with forward and backward buttons.
-- [] Show opening moves by each player.
-- [] Present game summary with precision details and winner indication.
-- [] Provide move status (blunder, inaccuracy, miss, good, great, excellent, brilliant) feedback.
-- [] Dockerize the application for simplified deployment.
+- [ ] Fetch and display all games played this month via [Chess.com](http://chess.com/) API.
+- [ ] Navigate to previous months' games with a "<" button.
+- [ ] Load selected game onto the board by clicking on it.
+- [ ] Receive notification when game analysis is complete.
+- [ ] Adjust Stockfish analysis depth.
+- [ ] Easily navigate moves with forward and backward buttons.
+- [ ] Show opening moves by each player.
+- [ ] Present game summary with precision details and winner indication.
+- [ ] Provide move status (blunder, inaccuracy, miss, good, great, excellent, brilliant) feedback.
+- [ ] Dockerize the application for simplified deployment.
 
 ## **Developer Resources**
 
