@@ -1,5 +1,5 @@
 /******************************************************************************
- * File:	GamesPlayedPage.hpp
+ * File:		GamesPlayedPage.hpp
  * Authors:     see AUTHORS file
  * Date:        May 3, 2024
  * Description: This file contains the required method to render the 2nd Page
@@ -26,7 +26,9 @@ namespace Stuckfish
 		Core& _app;
 		Logic& _logic;
 		UserData& _userdata;
+		Response _res;
 
 		bool _hasRetrievedGames = false;
+		bool _isFirstElement = true;
 	};
 }

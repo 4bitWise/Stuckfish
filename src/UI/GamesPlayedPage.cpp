@@ -29,43 +29,38 @@ void GamesPlayedPage::OnUIRender()
 	ImGui::Text("Games played: April 2024"); // TODO: get the current month using a C++ library
 	ImGui::PopFont();
 
-	ImVec2 buttonSize(confirmButtonSizeX*5, confirmButtonSizeY);
-	ImGui::SetCursorPos(ImVec2(windowMiddlePos.x - (buttonSize.x / 2.0f), windowMiddlePos.y - 300));
-	ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.0f, 0.5f));
-		
 	// list of all games played in the specified month from which we can extract:
 	// the player and his ELO and same for the opponent, the game status for the player (win/lose/draw)
 	// the game time control (rapid, blitz, bullet)
+	ImVec2 buttonSize(confirmButtonSizeX*5, confirmButtonSizeY);
 	if (!_hasRetrievedGames)
 	{
-		// Check if the retrieval has been ended with success or with an error code
-		// and handle the error appropriately if it occurs. When there are no errors,
-		// find a way to get the Games data list.
-		_logic.GamesPlayedWithinPeriod(_userdata.username, "2024", "05");
+		_res = _logic.GamesPlayedWithinPeriod(_userdata.username, "2024", "05");
+
+		// handle every errors here
+		if (_res.errorCode == EXIT_FAILURE)
+		{
+			_errorOccured = true;
+			_errorMessage = _res.errorMessage;
+		}
 		_hasRetrievedGames = true;
 	}
+	
+	// Begin a scrollable region
+	ImGui::BeginChild("ScrollingRegion", ImVec2(0, 0), true, ImGuiWindowFlags_HorizontalScrollbar);
+	for (auto& game : _res.gamesData) {
+		std::string buttonLabel = game.whiteUsername + "(" + game.whiteRating + ") vs " +
+								  game.blackUsername + "(" + game.blackRating + ") - "  +
+								  game.result + " - " + game.timeClass;
 
-	// games list
-	if (ImGui::Button("Button 1", buttonSize))
-	{
-		std::cout << "1";
+		ImVec2 buttonPos = ImVec2((ImGui::GetWindowSize().x - buttonSize.x) / 2.0f, ImGui::GetCursorPosY());
+		ImGui::SetCursorPos(buttonPos);
+		if (ImGui::Button(buttonLabel.c_str(), buttonSize)) {
+			// link to the next page maybe ?
+			std::cout << game.pgn;
+		}
 	}
-		
-	ImGui::SetCursorPos(ImVec2(windowMiddlePos.x - (buttonSize.x / 2.0f), windowMiddlePos.y - 260));
-	if (ImGui::Button("Button 2", buttonSize))
-	{
-		// Handle button click
-		std::cout << "2";
-	}
-
-	ImGui::SetCursorPos(ImVec2(windowMiddlePos.x - (buttonSize.x / 2.0f), windowMiddlePos.y - 220));
-	if (ImGui::Button("Button 3", buttonSize))
-	{
-		// Handle button click
-		std::cout << "3";
-	}
-	ImGui::PopStyleVar();
-
+	ImGui::EndChild();
 	ImGui::End();
 }
 

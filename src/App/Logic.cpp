@@ -58,9 +58,8 @@ Logic::GetInfosFromListOfGamesPlayed(const std::string& username, const Document
             const Value& gamesArray = doc["games"];
 
             if (gamesArray.Empty()) {
-                // display on the window "No games found"
-                // Log in the local console the same thing
-                std::cout << "No games found !\n";
+                // No popup, just display a a message on the screen
+                std::cerr << "No games found !\n";
                 return;
             }
             // Iterate over the array and do whatever you need with each game object
@@ -90,9 +89,9 @@ Logic::GetInfosFromListOfGamesPlayed(const std::string& username, const Document
 
                 // find if player has played as white or black and display if he won or lost the game.
                 if (gameData.whiteUsername == username)
-                    gameData.gameResult = game["white"]["result"] != "win" ? "Lost" : "Won";
+                    gameData.result = game["white"]["result"] != "win" ? "Lost" : "Won";
                 else
-                    gameData.gameResult = game["black"]["result"] != "win" ? "Lost" : "Won";    
+                    gameData.result = game["black"]["result"] != "win" ? "Lost" : "Won";    
 
                 // insert this game data in the vector
                 _gamesData.push_back(gameData);
@@ -112,7 +111,7 @@ Logic::GetInfosFromListOfGamesPlayed(const std::string& username, const Document
 //------------------------------------------------------------------------------
 /**
 */
-void
+const Response&
 Logic::GamesPlayedWithinPeriod(const std::string& username, const std::string& year, const std::string& month)
 {
     std::string url = "https://api.chess.com/pub/player/" + to_lower(username) + "/games/" + year + '/' + month;
@@ -120,19 +119,16 @@ Logic::GamesPlayedWithinPeriod(const std::string& username, const std::string& y
 
     if (res.status_code == cpr::status::HTTP_OK) {
         Document doc;
+
         doc.Parse(res.text.c_str());
         GetInfosFromListOfGamesPlayed(username, doc);
+        _res.errorCode = EXIT_SUCCESS;
+        _res.gamesData = _gamesData;
     } else {
-        std::cerr << "Request failed with status code: " << res.status_code << std::endl;
-        return;
+        _res.errorCode = res.status_code;
+        _res.errorMessage = res.error.message;
     }
-
-    for (auto g : _gamesData) {
-        std::cout << "White username: " << g.whiteUsername << '(' << g.whiteRating << ")\n";
-        std::cout << "Black username: " << g.blackUsername << '(' << g.blackRating << ")\n";
-        std::cout << "Game Result: " << g.gameResult << "\n\n";
-    }
-    return;
+    return _res;
 }
 
 }
