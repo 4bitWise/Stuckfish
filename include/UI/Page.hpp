@@ -21,9 +21,7 @@ namespace Stuckfish
 	const float confirmButtonSizeY = 35.0f;
 	const float popupConfirmButtonSizeX = 50.0f;
 	const float popupConfirmButtonSizeY = 0.0f;
-
 	const float roundingValue = 5.0f;
-
 	const float inputFieldWidth = 400;
 
 	enum class WindowTitle
@@ -71,27 +69,4 @@ namespace Stuckfish
 			default:					   return "[Unknown Error]";
 		}
 	}
-
-	struct UserData
-	{
-		UserData(const std::string& name = "") : username(name)
-		{};
-
-		std::string username;
-	};
-
-	class Page
-	{
-	public:
-
-		virtual ~Page() = default; // virtual destructor as the class will be inherited.
-		virtual void OnUpdate() {};
-		virtual void OnUIRender() {};
-		virtual void OnAttach() {};
-		virtual void OnDetach() {};
-
-	public:
-		bool _errorOccured = false;
-		std::string _errorMessage = "";	
-	};
 }

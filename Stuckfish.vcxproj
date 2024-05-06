@@ -33,10 +33,11 @@
     <ClCompile Include="src\glad.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\UI\Fonts.cpp" />
-    <ClCompile Include="src\UI\GamesPlayedPage.cpp" />
-    <ClCompile Include="src\UI\UserInfosPage.cpp" />
+    <!-- <ClCompile Include="src\UI\GamesPlayedPage.cpp" /> -->
+    <ClCompile Include="src\UI\HomePage.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Imgui.hpp" />
     <ClInclude Include="thirdparty\imgui\imgui.h" />
     <ClInclude Include="thirdparty\imgui\imgui_impl_glfw.h" />
     <ClInclude Include="thirdparty\imgui\imgui_impl_opengl3.h" />
@@ -46,11 +47,11 @@
     <ClInclude Include="thirdparty\imgui\imstb_textedit.h" />
     <ClInclude Include="thirdparty\imgui\imstb_truetype.h" />
     <ClInclude Include="include\UI\fonts.hpp" />
-    <ClInclude Include="include\UI\GamesPlayedPage.hpp" />
+    <!-- <ClInclude Include="include\UI\GamesPlayedPage.hpp" /> -->
     <ClInclude Include="include\App\Logic.hpp" />
     <ClInclude Include="include\UI\Page.hpp" />
     <ClInclude Include="include\App\Stuckfish.hpp" />
-    <ClInclude Include="include\UI\UserInfosPage.hpp" />
+    <ClInclude Include="include\UI\HomePage.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

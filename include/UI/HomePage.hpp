@@ -6,24 +6,37 @@
  *****************************************************************************/
 
 #include "Page.hpp"
+#include "../Imgui.hpp"
 
 namespace Stuckfish
 {
-	class UserInfosPage : public Page
+	class Core;
+}
+
+namespace Stuckfish
+{
+
+	enum HomePageEvent
+	{
+		NONE = 0,
+		ON_USERNAME_SUBMITTED
+	};
+
+	class HomePage
 	{
 	public:
-		UserInfosPage(Core& app, Logic& logic, UserData& userData) : _app(app), _logic(logic), _userdata(userData)
-		{}
+		HomePage(Core& app) : _app(app), _userData(std::make_shared<UserData>())
+		{
+			_event = HomePageEvent::NONE;
+		}
 
-		void OnUpdate() override;
-		void OnUIRender() override;
-		void OnAttach() override;
-		void OnDetach() override;
+		void Render(void);
+		void Update(void);
 
 	private:
 		Core& _app;
-		Logic& _logic;
-		UserData& _userdata;
+		std::shared_ptr<UserData> _userData;
+		HomePageEvent _event;
 	};
 }
 

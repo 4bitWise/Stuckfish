@@ -104,6 +104,7 @@ void GamesPlayedPage::OnUIRender()
 		return;
 	}
 
+	// reverse the list of games
 	for (const auto& game : _res.gamesData) {
 		std::string buttonLabel = game.whiteUsername + "(" + game.whiteRating + ") vs " +
 								  game.blackUsername + "(" + game.blackRating + ") - "  +

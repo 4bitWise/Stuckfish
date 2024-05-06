@@ -4,10 +4,6 @@
  *****************************************************************************/
 
 #include "../../include/App/Stuckfish.hpp"
-#include "../../include/UI/UserInfosPage.hpp"
-#include "../../include/UI/GamesPlayedPage.hpp"
-
-static Stuckfish::Core* current_instance = nullptr;
 
 static void glfw_error_callback(int error, const char* description)
 {
@@ -29,11 +25,10 @@ namespace Stuckfish
 //------------------------------------------------------------------------------
 /**
 */
-Core::Core(const WindowSpecs& win_specs)
+Core::Core(const WindowSpecs& win_specs) :
+	_homePage(*this)
 {
 	Init();
-
-	current_instance = this;
 }
 
 //------------------------------------------------------------------------------
@@ -42,8 +37,6 @@ Core::Core(const WindowSpecs& win_specs)
 Core::~Core()
 {
 	Quit();
-
-	current_instance = nullptr;
 }
 
 //------------------------------------------------------------------------------
@@ -60,7 +53,7 @@ void Core::Init(void)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
-	_window = check_return(glfwCreateWindow(_specs.width, _specs.height, _specs.name.c_str(), nullptr, nullptr), "Unable to create window. Exiting with code 1.");
+	_window = check_return(glfwCreateWindow(specs.width, specs.height, specs.name.c_str(), nullptr, nullptr), "Unable to create window. Exiting with code 1.");
 	glfwMakeContextCurrent(_window);
 	glfwSwapInterval(1); // Enable vsync
 
@@ -76,10 +69,10 @@ void Core::Init(void)
 	ImFontConfig fontConfig;
 	fontConfig.FontDataOwnedByAtlas = true;
 	ImFontAtlas* fontAtlas = io.Fonts;
-	_robotoFontHeader = check_return(fontAtlas->AddFontFromMemoryTTF((void*)roboto_regular, sizeof(roboto_regular), 28.0f), "Failed to load roboto header regular font.");
-	_robotoFontBody = check_return(fontAtlas->AddFontFromMemoryTTF((void*)roboto_regular, sizeof(roboto_regular), 20.0f), "Failed to load roboto body regular font!");
-	_robotoFontBodyMedium = check_return(fontAtlas->AddFontFromMemoryTTF((void*)roboto_medium, sizeof(roboto_medium), 20.0f), "Failed to load roboto body medium font!");
-	io.FontDefault = _robotoFontBody;
+	robotoFontHeader = check_return(fontAtlas->AddFontFromMemoryTTF((void*)roboto_regular, sizeof(roboto_regular), 28.0f), "Failed to load roboto header regular font.");
+	robotoFontBody = check_return(fontAtlas->AddFontFromMemoryTTF((void*)roboto_regular, sizeof(roboto_regular), 20.0f), "Failed to load roboto body regular font!");
+	robotoFontBodyMedium = check_return(fontAtlas->AddFontFromMemoryTTF((void*)roboto_medium, sizeof(roboto_medium), 20.0f), "Failed to load roboto body medium font!");
+	io.FontDefault = robotoFontBody;
 
 	// Setup Platform/Renderer backends
 	ImGui_ImplGlfw_InitForOpenGL(_window, true);
@@ -104,15 +97,16 @@ void Core::Run(void)
 		ImGui::NewFrame();
 
 		{
-					
-			_pageStack.front()->OnUIRender();
-			if (_pageStack.front()->_errorOccured)
-				DisplayErrorPopup(_pageStack.front()->_errorMessage.c_str());
+			_homePage.Render();
+			_homePage.Update();
+
+			if (errorOccured)
+				DisplayErrorPopup(errorMessage.c_str());
 		}
 
 		ImGui::Render();
 
-		glViewport(0, 0, _specs.width, _specs.height);
+		glViewport(0, 0, specs.width, specs.height);
 		glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
 		glClear(GL_COLOR_BUFFER_BIT);
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -125,14 +119,9 @@ void Core::Run(void)
 */
 void Core::Quit(void)
 {
-	//for (auto& page : _pageStack)
-		//page.reset();
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
-
-	// Clear page stack
-	_pageStack.clear();
 
 	glfwDestroyWindow(_window);
 	glfwTerminate();
@@ -141,33 +130,10 @@ void Core::Quit(void)
 //------------------------------------------------------------------------------
 /**
 */
-Core& Core::Get(void)
-{
-	return *current_instance;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-std::unique_ptr<Core> CreateApplication(void)
-{
-	WindowSpecs specs;
-
-	std::unique_ptr<Core> app = std::make_unique<Core>(specs);
-
-	app->PushLayer<UserInfosPage>(Core::Get(), app->_appLogic, app-> _userData);
-	app->PushLayer<GamesPlayedPage>(Core::Get(), app->_appLogic, app->_userData);
-
-	return app;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
 void Core::DisplayErrorPopup(const char *error_message)
 {
 	// Calculate the position of the popup in the upper right corner
-	ImVec2 popupPos(static_cast<float>(_specs.width - ImGui::GetWindowSize().x / 2.8), 0);
+	ImVec2 popupPos(static_cast<float>(specs.width - ImGui::GetWindowSize().x / 2.8), 0);
 	ImVec4 redColor = ImVec4(1.0f, 0.0f, 0.0f, 1.0f);
 
 	ImGui::OpenPopup(WindowTitlesToString(WindowTitle::ERROR_POPUP));
@@ -177,7 +143,7 @@ void Core::DisplayErrorPopup(const char *error_message)
 		ImGuiWindowFlags_NoMove))
 	{
 	
-		ImGui::PushFont(_robotoFontBodyMedium);
+		ImGui::PushFont(robotoFontBodyMedium);
 		ImGui::TextColored(redColor, "An error occurred");
 		ImGui::PopFont();
 		ImGui::Separator();
@@ -201,11 +167,8 @@ void Core::DisplayErrorPopup(const char *error_message)
 */
 void Core::RemoveErrorPopup(void)
 {
-	for (auto& page : _pageStack)
-	{
-		page->_errorOccured = false;
-		page->_errorMessage.clear();
-	}
+	errorOccured = false;
+	errorMessage.clear();
 	ImGui::CloseCurrentPopup();
 }
 

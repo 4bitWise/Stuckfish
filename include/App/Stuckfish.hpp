@@ -12,13 +12,11 @@
 #include <stdio.h>
 #include <iostream>
 
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
-#include "imgui_stdlib.h"
+#include "../Imgui.hpp"
 
 #include "../UI/fonts.hpp"
 #include "../UI/Page.hpp"
+#include "../UI/HomePage.hpp"
 
 #include <vector>
 
@@ -52,45 +50,24 @@ namespace Stuckfish
 		~Core();
 
 		void Run(void);
-		
-		static Core& Get(void);
-		
-		template<typename T, typename... Args>
-		void PushLayer(Args&&... args) {
-			static_assert(std::is_base_of<Page, T>::value, "Pushed type is not subclass of Page!");
-			_pageStack.emplace_back(std::make_shared<T>(std::forward<Args>(args)...));
-		}
-
-		/*template<typename T>
-		T& GetLayer() {
-			return dynamic_cast<T&>(*(_pageStack.front()));
-		}*/
-
-		std::vector<std::shared_ptr<Page>>& GetPageStack(void)
-		{
-			return _pageStack;
-		}
-
 		void DisplayErrorPopup(const char *error_message);
 		void RemoveErrorPopup(void);
 
 	public:
-		ImFont* _robotoFontHeader = nullptr;
-		ImFont* _robotoFontBody = nullptr;
-		ImFont* _robotoFontBodyMedium = nullptr;
+		ImFont* robotoFontHeader = nullptr;
+		ImFont* robotoFontBody = nullptr;
+		ImFont* robotoFontBodyMedium = nullptr;
 
-		WindowSpecs _specs;
-		Logic _appLogic;
-		UserData _userData;
+		WindowSpecs specs;
+		Logic logic;
+		bool  errorOccured = false;
+		std::string errorMessage;
 	private:
 		void Init(void);
 		void Quit(void);
 
 	private:
 		GLFWwindow* _window = nullptr;
-
-		std::vector<std::shared_ptr<Page>> _pageStack;
+		HomePage    _homePage;
 	};
-
-	std::unique_ptr<Core> CreateApplication(void);
 };

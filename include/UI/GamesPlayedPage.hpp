@@ -12,16 +12,16 @@
 
 namespace Stuckfish
 {
-	class GamesPlayedPage : public Page
+	class GamesPlayedPage
 	{
 	public:
 		GamesPlayedPage(Core& app, Logic& logic, UserData& userData) : _app(app), _logic(logic), _userdata(userData)
 		{};
 
-		void OnUpdate() override;
-		void OnUIRender() override;
-		void OnAttach() override;
-		void OnDetach() override;
+		void OnUpdate();
+		void OnUIRender();
+		void OnAttach();
+		void OnDetach();
 
 	private:
 		Core& _app;

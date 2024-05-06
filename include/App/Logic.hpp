@@ -46,6 +46,14 @@ namespace Stuckfish
 		NETWORK_ERROR
 	};
 
+	struct UserData
+	{
+		UserData(const std::string& name = "") : username(name)
+		{};
+
+		std::string username;
+	};
+
 	class Logic
 	{
 	public:

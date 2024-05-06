@@ -7,8 +7,9 @@
 
 int main(int argc, char* argv[])
 {
-	std::unique_ptr<Stuckfish::Core> app = Stuckfish::CreateApplication();
-	
+	Stuckfish::WindowSpecs specs;
+	std::unique_ptr<Stuckfish::Core> app = std::make_unique<Stuckfish::Core>(specs);
+
 	app->Run();
 	app.release();
 

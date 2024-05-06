@@ -3,26 +3,27 @@
  * Authors:     see AUTHORS file
  *****************************************************************************/
 
-#include "../../include/UI/UserInfosPage.hpp"
-#include "../../include/UI/GamesPlayedPage.hpp"
+#include "../../include/App/Stuckfish.hpp"
 
 namespace Stuckfish
 {
 //------------------------------------------------------------------------------
 /**
 */
-void UserInfosPage::OnUIRender()
+void HomePage::Render(void)
 {
-	float centeredWindowPosX =  static_cast<float>(_app._specs.width / 2 - 390);
-	float centeredWindowPosY = static_cast<float>(_app._specs.height / 2 - 120);
+	_event = HomePageEvent::NONE;
+
+	float centeredWindowPosX =  static_cast<float>(_app.specs.width / 2 - 390);
+	float centeredWindowPosY = static_cast<float>(_app.specs.height / 2 - 120);
 
 	ImVec2 buttonSize(confirmButtonSizeX, confirmButtonSizeY);
 	ImVec2 windowPos(centeredWindowPosX, centeredWindowPosY);
 
 	ImGui::SetNextWindowPos(windowPos, ImGuiCond_Always);
-	ImGui::SetNextWindowSize(ImVec2(static_cast<float>(_app._specs.width) / 2, static_cast<float>(_app._specs.height) / 2), ImGuiCond_Always);
+	ImGui::SetNextWindowSize(ImVec2(static_cast<float>(_app.specs.width) / 2, static_cast<float>(_app.specs.height) / 2), ImGuiCond_Always);
 	ImGui::Begin(WindowTitlesToString(WindowTitle::USERINFO_PAGE), NULL, ImGuiWindowFlags_NoTitleBar |
-		ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBackground |
+		ImGuiWindowFlags_NoDecoration |
 		ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
 		ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBringToFrontOnFocus);
 
@@ -32,7 +33,7 @@ void UserInfosPage::OnUIRender()
 	ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, roundingValue);
 
 	// page title
-	ImGui::PushFont(_app._robotoFontHeader);
+	ImGui::PushFont(_app.robotoFontHeader);
 	ImGui::SetCursorPos(ImVec2(windowMiddlePos.x - 225, windowMiddlePos.y - 140));
 	ImGui::Text("Please provide your Chess.com username");
 	ImGui::PopFont();
@@ -41,12 +42,12 @@ void UserInfosPage::OnUIRender()
 	ImGui::SetCursorPos(ImVec2(windowMiddlePos.x - 200, windowMiddlePos.y - 90));
 	ImGui::SetNextItemWidth(inputFieldWidth);
 	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(10.0f, 10.0f));
-	ImGui::InputTextWithHint("##input", "Chess.com username...", &_userdata.username);
+	ImGui::InputTextWithHint("##input", "Chess.com username...", &_userData->username);
 	ImGui::PopStyleVar();
 
 	ImGui::SetCursorPos(ImVec2(windowMiddlePos.x - (buttonSize.x / 2.0f), windowMiddlePos.y - 40));
 	if (ImGui::Button(ButtonsToString(Buttons::CONFIRM), buttonSize)) {
-		OnUpdate();
+		_event = HomePageEvent::ON_USERNAME_SUBMITTED;
 	}
 	ImGui::PopStyleVar();
 	ImGui::End();
@@ -55,46 +56,26 @@ void UserInfosPage::OnUIRender()
 //------------------------------------------------------------------------------
 /**
 */
-void UserInfosPage::OnUpdate()
+void HomePage::Update()
 {
-	//std::string& username = _activeSession.GetUsername();
-	if (_userdata.username.empty())
+	if (_event == HomePageEvent::ON_USERNAME_SUBMITTED)
 	{
-		_errorOccured = true;
-		_errorMessage = ErrorsToString(Errors::EMPTY_USERNAME);
-		return;
+		if (_userData->username.empty())
+		{
+			_app.errorOccured = true;
+			_app.errorMessage = ErrorsToString(Errors::EMPTY_USERNAME);
+			return;
+		}
+
+		bool user_exists = _app.logic.IsChessDotComUser(_userData->username);
+
+		if (!user_exists)
+		{
+			_app.errorOccured = true;
+			_app.errorMessage = ErrorsToString(Errors::USERNAME_NOT_FOUND);
+			return;
+		}
 	}
-
-	bool user_exists = _logic.IsChessDotComUser(_userdata.username);
-
-	if (!user_exists)
-	{
-		_errorOccured = true;
-		_errorMessage = ErrorsToString(Errors::USERNAME_NOT_FOUND);
-		return;
-	}
-
-	OnDetach();
-	return;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void UserInfosPage::OnAttach()
-{
-	_app.PushLayer<UserInfosPage>(_app, _logic, _userdata);
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void UserInfosPage::OnDetach()
-{
-	std::vector<std::shared_ptr<Page>>& pageStack = _app.GetPageStack();
-
-	if (!pageStack.empty())
-		pageStack.erase(pageStack.begin());
 
 	return;
 }
