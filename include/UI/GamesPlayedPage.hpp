@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "Stuckfish.hpp"
+#include "../App/Stuckfish.hpp"
 #include <ctime>
 
 namespace Stuckfish

@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "Logic.hpp"
+#include "../App/Logic.hpp"
 #include <memory.h>
 
 namespace Stuckfish

@@ -7,7 +7,7 @@
 
 
 static
-std::string getCurrentMonth(void)
+const std::string getCurrentMonth(void)
 {
 	std::time_t currentTime;
 	std::tm currentTm;
@@ -28,7 +28,7 @@ std::string getCurrentMonth(void)
 }
 
 static
-std::string getCurrentYear(void)
+const std::string getCurrentYear(void)
 {
 	std::time_t currentTime;
 	std::tm currentTm;
@@ -113,7 +113,8 @@ void GamesPlayedPage::OnUIRender()
 		ImGui::SetCursorPos(buttonPos);
 		if (ImGui::Button(buttonLabel.c_str(), buttonSize)) {
 			_selectedGameData = game;
-			OnUpdate();
+			std::cout << game.pgn;
+			//OnUpdate();
 		}
 	}
 	ImGui::EndChild();

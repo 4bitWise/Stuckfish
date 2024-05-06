@@ -109,14 +109,14 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Users\Aman\source\repos\stuckfish\include\App;C:\Users\Aman\source\repos\stuckfish\include\UI;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)include\App;$(ProjectDir)include\UI;$(IncludePath)</IncludePath>
     <LibraryPath>include\lib;$(LibraryPath)</LibraryPath>
-    <SourcePath>C:\Users\Aman\source\repos\stuckfish\src\UI;C:\Users\Aman\source\repos\stuckfish\src\App;C:\Users\Aman\source\repos\stuckfish\src</SourcePath>
+    <SourcePath>$(ProjectDir)src\UI;$(ProjectDir)src\App;$(ProjectDir)src</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\Aman\source\repos\stuckfish\include\App;C:\Users\Aman\source\repos\stuckfish\include\UI;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)include\App;$(ProjectDir)include\UI;$(IncludePath)</IncludePath>
     <LibraryPath>include\lib;$(LibraryPath)</LibraryPath>
-    <SourcePath>C:\Users\Aman\source\repos\stuckfish\src\UI;C:\Users\Aman\source\repos\stuckfish\src\App;C:\Users\Aman\source\repos\stuckfish\src</SourcePath>
+    <SourcePath>$(ProjectDir)src\UI;$(ProjectDir)src\App;$(ProjectDir)src</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>include\UI;include\App;$(IncludePath)</IncludePath>

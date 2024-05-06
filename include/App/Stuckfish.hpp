@@ -17,8 +17,8 @@
 #include "imgui_impl_opengl3.h"
 #include "imgui_stdlib.h"
 
-#include "fonts.hpp"
-#include "Page.hpp"
+#include "../UI/fonts.hpp"
+#include "../UI/Page.hpp"
 
 #include <vector>
 
