@@ -8,6 +8,7 @@
 #pragma once
 
 #include "Stuckfish.hpp"
+#include <ctime>
 
 namespace Stuckfish
 {
@@ -27,6 +28,7 @@ namespace Stuckfish
 		Logic& _logic;
 		UserData& _userdata;
 		Response _res;
+		GamesData _selectedGameData;
 
 		bool _hasRetrievedGames = false;
 		bool _isFirstElement = true;

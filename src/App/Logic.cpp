@@ -53,59 +53,76 @@ void
 Logic::GetInfosFromListOfGamesPlayed(const std::string& username, const Document& doc)
 {
     // Check if parsing succeeded
-    if (!doc.HasParseError()) {
-        if (doc.HasMember("games") && doc["games"].IsArray()) {
-            const Value& gamesArray = doc["games"];
-
-            if (gamesArray.Empty()) {
-                // No popup, just display a a message on the screen
-                std::cerr << "No games found !\n";
-                return;
-            }
-            // Iterate over the array and do whatever you need with each game object
-            for (SizeType i = 0; i < gamesArray.Size(); ++i) {
-                const Value& game = gamesArray[i];
-                GamesData gameData;
-
-                // get white username and rating
-                if ((gameData.whiteUsername = extractString(game["white"], "username")) == "")
-                    std::cerr << "Unable to get white username\n";
-                if ((gameData.whiteRating = extractInt(game["white"], "rating")) == "")
-                    std::cerr << "Unable to get white rating\n";
-
-                // get black username and rating
-                if ((gameData.blackUsername = extractString(game["black"], "username")) == "")
-                    std::cerr << "Unable to get black username\n";
-                if ((gameData.blackRating = extractInt(game["black"], "rating")) == "")
-                    std::cerr << "Unable to get black rating\n";
-
-                // get time_class
-                if ((gameData.timeClass = extractString(game, "time_class")) == "")
-                    std::cerr << "Unable to get time class\n";
-
-                //get pgn
-                if ((gameData.pgn = extractString(game, "pgn")) == "")
-                    std::cerr << "Unable to get png\n";
-
-                // find if player has played as white or black and display if he won or lost the game.
-                if (gameData.whiteUsername == username)
-                    gameData.result = game["white"]["result"] != "win" ? "Lost" : "Won";
-                else
-                    gameData.result = game["black"]["result"] != "win" ? "Lost" : "Won";    
-
-                // insert this game data in the vector
-                _gamesData.push_back(gameData);
-            }
-        }
-        else {
-            std::cerr << "JSON does not contain a valid 'games' array field." << std::endl;
-            return;
-        }
-    }
-    else {
-        std::cerr << "Parsing failed with error code " << GetParseError_En(doc.GetParseError()) << std::endl;
+    if (doc.HasParseError())
+    {
+        _res.statusCode = ResponseCode::PARSING_ERROR;
+        _res.message = "Parsing failed with error code " + std::string(GetParseError_En(doc.GetParseError()));
         return;
     }
+
+    if (!doc.HasMember("games") || !doc["games"].IsArray()) {
+        _res.statusCode = ResponseCode::MISSING_FIELD_ERROR;
+        _res.message = "JSON does not contain a valid 'games' array field.\n";
+        return;
+    }
+
+    const Value& gamesArray = doc["games"];
+
+    if (gamesArray.Empty()) {
+        // No popup, just display a a message on the screen
+        _res.statusCode = ResponseCode::NO_GAMES_FOUND;
+        _res.message = "No games played yet !";
+        return;
+    }
+    // Iterate over the array and do whatever you need with each game object
+    for (SizeType i = 0; i < gamesArray.Size(); ++i) {
+        const Value& game = gamesArray[i];
+        GamesData gameData;
+
+        // get white username and rating
+        if ((gameData.whiteUsername = extractString(game["white"], "username")) == "")
+        {
+            _res.statusCode = ResponseCode::DATA_EXTRACTION_ERROR;
+            _res.message = "Unable to get white username\n";
+        }
+        if ((gameData.whiteRating = extractInt(game["white"], "rating")) == "")
+        {
+            _res.statusCode = ResponseCode::DATA_EXTRACTION_ERROR;
+            _res.message = "Unable to get white rating\n";
+        }
+        // get black username and rating
+        if ((gameData.blackUsername = extractString(game["black"], "username")) == "")
+        {
+            _res.statusCode = ResponseCode::DATA_EXTRACTION_ERROR;
+            _res.message = "Unable to get black username\n";
+        }
+        if ((gameData.blackRating = extractInt(game["black"], "rating")) == "")
+        {
+            _res.statusCode = ResponseCode::DATA_EXTRACTION_ERROR;
+            _res.message = "Unable to get black rating\n";
+        }
+        // get time_class
+        if ((gameData.timeClass = extractString(game, "time_class")) == "")
+        {
+            _res.statusCode = ResponseCode::DATA_EXTRACTION_ERROR;
+            _res.message = "Unable to get time class\n";
+        }
+        //get pgn
+        if ((gameData.pgn = extractString(game, "pgn")) == "")
+        {
+            _res.statusCode = ResponseCode::DATA_EXTRACTION_ERROR;
+            _res.message = "Unable to get pgn\n";
+        }
+        // find if player has played as white or black and display if he won or lost the game.
+        if (gameData.whiteUsername == username)
+            gameData.result = game["white"]["result"] != "win" ? "Lost" : "Won";
+        else
+            gameData.result = game["black"]["result"] != "win" ? "Lost" : "Won";
+
+        // insert this game data in the vector
+        _gamesData.push_back(gameData);
+    }
+    _res.statusCode = ResponseCode::OK;
 }
 
 //------------------------------------------------------------------------------
@@ -116,18 +133,18 @@ Logic::GamesPlayedWithinPeriod(const std::string& username, const std::string& y
 {
     std::string url = "https://api.chess.com/pub/player/" + to_lower(username) + "/games/" + year + '/' + month;
     cpr::Response res = cpr::Get(cpr::Url{ url });
+    Document doc;
 
-    if (res.status_code == cpr::status::HTTP_OK) {
-        Document doc;
-
-        doc.Parse(res.text.c_str());
-        GetInfosFromListOfGamesPlayed(username, doc);
-        _res.errorCode = EXIT_SUCCESS;
-        _res.gamesData = _gamesData;
-    } else {
-        _res.errorCode = res.status_code;
-        _res.errorMessage = res.error.message;
+    if (res.status_code == cpr::status::HTTP_NOT_FOUND)
+    {
+        _res.statusCode = NO_GAMES_FOUND;
+        _res.message = "No games played yet !";
+        return _res;
     }
+
+    doc.Parse(res.text.c_str());
+    GetInfosFromListOfGamesPlayed(username, doc);
+    _res.gamesData = _gamesData;
     return _res;
 }
 

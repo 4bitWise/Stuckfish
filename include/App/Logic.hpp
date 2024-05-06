@@ -31,9 +31,19 @@ namespace Stuckfish
 
 	struct Response
 	{
-		int errorCode;
-		std::string errorMessage;
+		int statusCode;
+		std::string message;
 		std::vector<GamesData> gamesData;
+	};
+
+	enum ResponseCode
+	{
+		OK = 0,
+		NO_GAMES_FOUND,
+		DATA_EXTRACTION_ERROR,
+		MISSING_FIELD_ERROR,
+		PARSING_ERROR,
+		NETWORK_ERROR
 	};
 
 	class Logic
