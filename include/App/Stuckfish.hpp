@@ -39,8 +39,8 @@ namespace Stuckfish
 	struct WindowSpecs
 	{
 		std::string name = "Stuckfish";
-		uint32_t width = 1500;
-		uint32_t height = 800;
+		float width = 1500;
+		float height = 800;
 	};
 
 	class Core

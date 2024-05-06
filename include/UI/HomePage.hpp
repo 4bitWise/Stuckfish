@@ -19,7 +19,8 @@ namespace Stuckfish
 	enum HomePageEvent
 	{
 		NONE = 0,
-		ON_USERNAME_SUBMITTED
+		ON_USERNAME_SUBMITTED,
+		ON_GAME_SELECTION,
 	};
 
 	class HomePage
@@ -28,15 +29,21 @@ namespace Stuckfish
 		HomePage(Core& app) : _app(app), _userData(std::make_shared<UserData>())
 		{
 			_event = HomePageEvent::NONE;
+			_selectedGameData = nullptr;
 		}
 
 		void Render(void);
 		void Update(void);
 
+		void RenderPopup(void);
 	private:
 		Core& _app;
-		std::shared_ptr<UserData> _userData;
 		HomePageEvent _event;
+		std::shared_ptr<GamesData> _selectedGameData;
+		std::vector<GamesData> _gamesData;
+		std::shared_ptr<UserData> _userData;
+
+		bool _hasRetrievedGames = false;
 	};
 }
 
