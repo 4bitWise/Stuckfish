@@ -36,6 +36,10 @@ namespace Stuckfish
 		void Update(void);
 
 		void RenderPopup(void);
+		void RenderChessBoard(void);
+		void RenderUsernameInputBox(bool isDisabled);
+		void RenderGameReview(void);
+
 	private:
 		Core& _app;
 		HomePageEvent _event;

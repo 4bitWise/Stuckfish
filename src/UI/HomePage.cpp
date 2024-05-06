@@ -51,7 +51,6 @@ void HomePage::Render(void)
 
 	_event = (_event != HomePageEvent::ON_GAME_SELECTION) ? HomePageEvent::NONE : _event;
 
-	ImVec2 buttonSize(confirmButtonSizeX, confirmButtonSizeY);
 	
 	ImGui::SetNextWindowPos(ImVec2(0, 0));
 	ImGui::SetNextWindowSize(ImVec2(_app.specs.width, _app.specs.height));
@@ -60,33 +59,11 @@ void HomePage::Render(void)
 		ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus
 		| ImGuiWindowFlags_NoSavedSettings);
 
-	ImVec2 contentRegion = ImGui::GetContentRegionAvail();
-	ImVec2 windowMiddlePos = ImVec2(contentRegion.x / 2.0f, contentRegion.y / 2.0f);
+	RenderUsernameInputBox(isDisabled);
 
-	ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, roundingValue);
-
-	// page title
-	ImGui::PushFont(_app.robotoFontHeader);
-	ImGui::SetCursorPos(ImVec2(windowMiddlePos.x - 225, windowMiddlePos.y - 140));
-	ImGui::Text("Please provide your Chess.com username");
-	ImGui::PopFont();
-
-	// input field
-	ImGui::SetCursorPos(ImVec2(windowMiddlePos.x - 200, windowMiddlePos.y - 90));
-	ImGui::SetNextItemWidth(inputFieldWidth);
-	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(10.0f, 10.0f));
-	ImGui::InputTextWithHint("##input", "Chess.com username...", &_userData->username);
-	ImGui::PopStyleVar();
-
-	ImGui::SetCursorPos(ImVec2(windowMiddlePos.x - (buttonSize.x / 2.0f), windowMiddlePos.y - 40));
-	if (ImGui::Button(ButtonsToString(Buttons::CONFIRM), buttonSize) && !isDisabled) {
-		_event = HomePageEvent::ON_USERNAME_SUBMITTED;
-	}
-	
 	if (_event == HomePageEvent::ON_GAME_SELECTION)
 		RenderPopup();
 
-	ImGui::PopStyleVar();
 	ImGui::End();
 }
 
@@ -187,6 +164,27 @@ void HomePage::RenderPopup(void)
 
 	ImGui::EndChild();
 	ImGui::End();
+}
+
+void HomePage::RenderUsernameInputBox(bool isDisabled)
+{
+	ImVec2 contentRegion = ImGui::GetContentRegionAvail();
+	ImVec2 windowMiddlePos = ImVec2(contentRegion.x / 2.0f, contentRegion.y / 2.0f);
+	ImVec2 buttonSize(confirmButtonSizeX, confirmButtonSizeY);
+
+	ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, roundingValue);
+	ImGui::SetCursorPos(ImVec2(windowMiddlePos.x - 200, windowMiddlePos.y - 90));
+	ImGui::SetNextItemWidth(inputFieldWidth);
+	
+	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(10.0f, 10.0f));
+	ImGui::InputTextWithHint("##input", "Chess.com username...", &_userData->username);
+	ImGui::PopStyleVar();
+
+	ImGui::SetCursorPos(ImVec2(windowMiddlePos.x - (buttonSize.x / 2.0f), windowMiddlePos.y - 40));
+	if (ImGui::Button(ButtonsToString(Buttons::CONFIRM), buttonSize) && !isDisabled) {
+		_event = HomePageEvent::ON_USERNAME_SUBMITTED;
+	}
+	ImGui::PopStyleVar();
 }
 
 }
