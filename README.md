@@ -8,7 +8,7 @@ Stuckfish will be directly available through releases. Simply download the lates
 
 ## **Features (Work in Progress)**
 
-- [ ] Fetch and display all games played this month via [Chess.com](http://chess.com/) API.
+- [x] Fetch and display all games played this month via [Chess.com](http://chess.com/) API.
 - [ ] Navigate to previous months' games with a "<" button.
 - [ ] Load selected game onto the board by clicking on it.
 - [ ] Receive notification when game analysis is complete.
