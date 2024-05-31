@@ -70,3 +70,4 @@ namespace Stuckfish
 	};
 }
 
+// class to fetch the games data will be named differently

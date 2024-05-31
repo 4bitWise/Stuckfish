@@ -147,8 +147,7 @@ void HomePage::RenderPopup(void)
 		_hasRetrievedGames = true;
 	}
 
-
-	// reverse the list of games
+	std::reverse(_gamesData.begin(), _gamesData.end());
 	for (const auto& game : _gamesData) {
 		std::string buttonLabel = game.whiteUsername + "(" + game.whiteRating + ") vs " +
 			game.blackUsername + "(" + game.blackRating + ") - " +
@@ -190,19 +189,30 @@ void HomePage::RenderUsernameInputBox(bool isDisabled)
 
 void HomePage::RenderChessBoard(void)
 {
-	// Get the ImGui window draw list
-	ImDrawList* drawList = ImGui::GetWindowDrawList();
+	static bool texturesLoaded = false;
+	if (!texturesLoaded) {
+		_board.LoadPiecesTexture();
+		texturesLoaded = true;
+	}
 
-	// Get the top-left corner of the window where the board should start
+	ImDrawList* drawList = ImGui::GetWindowDrawList();
 	ImVec2 boardPos = ImGui::GetCursorScreenPos();
 
+	int pieceRow = 0;
+	int pieceCol = 0;
+	std::unordered_map<char, ImTextureID> piecesTextures = _board.getPiecesTextures();
+
+	/*for (auto [a, b] : piecesTextures)
+	{
+		std::cout << a << b << '\n';
+	}*/
 	for (int row = 0; row < CHESSBOARD_SIZE; ++row)
 	{
 		for (int col = 0; col < CHESSBOARD_SIZE; ++col)
 		{
 			// Calculate the position of the current tile and draw the tile
 			ImU32 tileColor = ((row + col) % 2 == 0) ? whiteTileColor : blackTileColor;
-			ImVec2 tilePos = ImVec2(boardPos.x + col * TILE_SIZE, boardPos.y + row * TILE_SIZE);
+			ImVec2 tilePos = ImVec2(boardPos.x + col * TILE_SIZE, boardPos.y + row * TILE_SIZE - 300);
 			ImVec2 tileEndPos = ImVec2(tilePos.x + TILE_SIZE, tilePos.y + TILE_SIZE);
 			drawList->AddRectFilled(tilePos, tileEndPos, tileColor);
 
@@ -226,6 +236,27 @@ void HomePage::RenderChessBoard(void)
 				ImVec2 textPos = ImVec2(tilePos.x + 2, tilePos.y + 2);
 				drawList->AddText(textPos, coordinatetextColor, coordText.c_str());
 			}
+		}
+	}
+
+	// Draw  pieces
+	for (char c : _board.getStartingPosition()) {
+		if (c == '/') {
+			pieceRow++;
+			pieceCol = 0;
+		}
+		else if (isdigit(c)) {
+			pieceCol += c - '0';
+		}
+		else {
+			ImVec2 piecePos = ImVec2(boardPos.x + pieceCol * TILE_SIZE, boardPos.y + pieceRow * TILE_SIZE - 300);
+			ImVec2 pieceEndPos = ImVec2(piecePos.x + TILE_SIZE, piecePos.y + TILE_SIZE);
+
+			if (piecesTextures.find(c) != piecesTextures.end()) {
+				ImTextureID pieceTexture = piecesTextures[c];
+				drawList->AddImage(pieceTexture, piecePos, pieceEndPos);
+			}
+			pieceCol++;	
 		}
 	}
 }

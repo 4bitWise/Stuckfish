@@ -20,6 +20,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\App\Chessboard.cpp" />
     <ClCompile Include="thirdparty\imgui\imgui.cpp" />
     <ClCompile Include="thirdparty\imgui\imgui_demo.cpp" />
     <ClCompile Include="thirdparty\imgui\imgui_draw.cpp" />
@@ -37,6 +38,7 @@
     <ClCompile Include="src\UI\HomePage.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\App\ChessBoard.hpp" />
     <ClInclude Include="include\Imgui.hpp" />
     <ClInclude Include="thirdparty\imgui\imgui.h" />
     <ClInclude Include="thirdparty\imgui\imgui_impl_glfw.h" />
@@ -52,10 +54,23 @@
     <ClInclude Include="include\UI\Page.hpp" />
     <ClInclude Include="include\App\Stuckfish.hpp" />
     <ClInclude Include="include\UI\HomePage.hpp" />
+    <ClInclude Include="thirdparty\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Roboto-Regular" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\pieces\black_bishop.png" />
+    <Image Include="assets\pieces\black_king.png" />
+    <Image Include="assets\pieces\black_knight.png" />
+    <Image Include="assets\pieces\black_pawn.png" />
+    <Image Include="assets\pieces\black_queen.png" />
+    <Image Include="assets\pieces\black_rook.png" />
+    <Image Include="assets\pieces\white_bishop.png" />
+    <Image Include="assets\pieces\white_king.png" />
+    <Image Include="assets\pieces\white_knight.png" />
+    <Image Include="assets\pieces\white_pawn.png" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
