@@ -40,6 +40,7 @@
   <ItemGroup>
     <ClInclude Include="include\App\ChessBoard.hpp" />
     <ClInclude Include="include\Imgui.hpp" />
+    <ClInclude Include="include\Utils.h" />
     <ClInclude Include="thirdparty\imgui\imgui.h" />
     <ClInclude Include="thirdparty\imgui\imgui_impl_glfw.h" />
     <ClInclude Include="thirdparty\imgui\imgui_impl_opengl3.h" />

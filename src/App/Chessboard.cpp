@@ -46,4 +46,69 @@ namespace Stuckfish
         _pieceTextures['k'] = LoadTextureFromFile("assets/pieces/black_king.png");
 
     }
+    void ChessBoard::draw(void)
+    {
+        ImDrawList* drawList = ImGui::GetWindowDrawList();
+        ImVec2 boardPos = ImGui::GetCursorScreenPos();
+
+        for (int row = 0; row < CHESSBOARD_SIZE; ++row)
+        {
+            for (int col = 0; col < CHESSBOARD_SIZE; ++col)
+            {
+                // Calculate the position of the current tile and draw the tile
+                ImU32 tileColor = ((row + col) % 2 == 0) ? whiteTileColor : blackTileColor;
+                ImVec2 tilePos = ImVec2(boardPos.x + col * TILE_SIZE, boardPos.y + row * TILE_SIZE - 300);
+                ImVec2 tileEndPos = ImVec2(tilePos.x + TILE_SIZE, tilePos.y + TILE_SIZE);
+                drawList->AddRectFilled(tilePos, tileEndPos, tileColor);
+
+                std::string coordText;
+                /*if (row == 0) {
+                    // Bottom row (a to h)
+                    coordText = std::string(1, 'h' - col);
+                }*/
+                // Case where user has played as white.
+                if (row == 7) {
+                    // Top row (h to a)
+                    coordText = std::string(1, 'a' + col);
+                    ImVec2 letterPos = ImVec2(tilePos.x + TILE_SIZE - ImGui::CalcTextSize(coordText.c_str()).x - 2, tilePos.y + TILE_SIZE - ImGui::CalcTextSize(coordText.c_str()).y - 2);
+                    drawList->AddText(letterPos, coordinatetextColor, coordText.c_str());
+                }
+                if (col == 0)
+                {
+                    // Draw the coordinates text
+                    coordText = std::to_string(8 - row);
+                    ImVec2 textPos = ImVec2(tilePos.x + 2, tilePos.y + 2);
+                    drawList->AddText(textPos, coordinatetextColor, coordText.c_str());
+                }
+            }
+        }
+    }
+ 
+    void ChessBoard::drawPieces(void)
+    {
+        ImDrawList* drawList = ImGui::GetWindowDrawList();
+        int pieceRow = 0;
+        int pieceCol = 0;
+        ImVec2 boardPos = ImGui::GetCursorScreenPos();
+
+        for (char c : _startingPositionFen) {
+            if (c == '/') {
+                pieceRow++;
+                pieceCol = 0;
+            }
+            else if (isdigit(c)) {
+                pieceCol += c - '0';
+            }
+            else {
+                ImVec2 piecePos = ImVec2(boardPos.x + pieceCol * TILE_SIZE, boardPos.y + pieceRow * TILE_SIZE - 300);
+                ImVec2 pieceEndPos = ImVec2(piecePos.x + TILE_SIZE, piecePos.y + TILE_SIZE);
+
+                if (_pieceTextures.find(c) != _pieceTextures.end()) {
+                    ImTextureID pieceTexture = _pieceTextures[c];
+                    drawList->AddImage(pieceTexture, piecePos, pieceEndPos);
+                }
+                pieceCol++;
+            }
+        }
+    }
 }

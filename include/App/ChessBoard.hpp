@@ -8,6 +8,7 @@
 #include "../Imgui.hpp"
 
 #include <unordered_map>
+#include "../Utils.h"
 
 namespace Stuckfish
 {
@@ -16,14 +17,14 @@ namespace Stuckfish
 	public:
 		ImTextureID LoadTextureFromFile(const char* filename);
 		void LoadPiecesTexture();
+		
 		const std::string& getStartingPosition()
-		{
-			return _startingPositionFen;
-		}
+		{ return _startingPositionFen; }
 		const std::unordered_map<char, ImTextureID>& getPiecesTextures()
-		{
-			return _pieceTextures;
-		}
+		{ return _pieceTextures; }
+		
+		void draw(void);
+		void drawPieces(void);
 
 	private:
 		const std::string _startingPositionFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
